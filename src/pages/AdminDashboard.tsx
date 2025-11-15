@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Check, X, Eye, Search, Filter, TrendingUp, Users, Clock, CheckCircle, XCircle, LogOut, Zap, Package, ImageIcon, FileText, Download, BarChart3, PieChart as PieChartIcon, Activity, RefreshCw, Mail, Phone, Building2, Calendar, Award, AlertCircle } from 'lucide-react';
+import { Check, X, Eye, Search, Filter, TrendingUp, Users, Clock, CheckCircle, XCircle, LogOut, Zap, Package, ImageIcon, FileText, Download, BarChart3, PieChart as PieChartIcon, Activity, RefreshCw, Mail, Phone, Building2, Calendar, Award, AlertCircle, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -347,6 +347,39 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleDeleteProduct = async (id: string) => {
+    if (!window.confirm('Are you sure you want to delete this product? This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_URL}/admin/products/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        toast({
+          title: 'Success',
+          description: 'Product deleted successfully',
+        });
+        fetchProducts();
+      } else {
+        throw new Error(data.message);
+      }
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to delete product',
+        variant: 'destructive',
+      });
+    }
+  };
+
   const handleApprove = async (id: string) => {
     try {
       const response = await fetch(`${API_URL}/admin/suppliers/${id}/approve`, {
@@ -661,6 +694,49 @@ const AdminDashboard = () => {
           </Card>
         </div>
 
+        {/* Tab Switcher */}
+        <div className="mb-6">
+          <Card className="border border-purple-500/20 shadow-xl bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl">
+            <CardContent className="p-2">
+              <div className="flex gap-2">
+                <Button
+                  onClick={() => setActiveTab('suppliers')}
+                  className={`flex-1 h-12 font-semibold transition-all duration-300 ${
+                    activeTab === 'suppliers'
+                      ? 'bg-gradient-to-r from-purple-600 to-orange-600 text-white shadow-lg shadow-purple-500/50'
+                      : 'bg-transparent text-purple-300 hover:bg-purple-500/20 border border-purple-500/30'
+                  }`}
+                >
+                  <Users className="w-4 h-4 mr-2" />
+                  Suppliers
+                  {statistics.pending > 0 && (
+                    <Badge className="ml-2 bg-orange-500 text-white">{statistics.pending}</Badge>
+                  )}
+                </Button>
+                <Button
+                  onClick={() => setActiveTab('products')}
+                  className={`flex-1 h-12 font-semibold transition-all duration-300 ${
+                    activeTab === 'products'
+                      ? 'bg-gradient-to-r from-purple-600 to-orange-600 text-white shadow-lg shadow-purple-500/50'
+                      : 'bg-transparent text-purple-300 hover:bg-purple-500/20 border border-purple-500/30'
+                  }`}
+                >
+                  <Package className="w-4 h-4 mr-2" />
+                  Products
+                  {products.filter(p => p.status === 'pending').length > 0 && (
+                    <Badge className="ml-2 bg-orange-500 text-white">
+                      {products.filter(p => p.status === 'pending').length}
+                    </Badge>
+                  )}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Suppliers Section */}
+        {activeTab === 'suppliers' && (
+          <>
         {/* Analytics Charts */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 lg:gap-6 mb-4 sm:mb-6">
           {/* Status Distribution Pie Chart */}
@@ -1122,6 +1198,172 @@ const AdminDashboard = () => {
               )}
             </CardContent>
           </Card>
+          </>
+        )}
+
+        {/* Products Section */}
+        {activeTab === 'products' && (
+          <Card className="border border-purple-500/20 shadow-2xl bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl">
+            <CardHeader className="bg-gradient-to-r from-purple-500/10 to-orange-500/10 border-b border-purple-500/20">
+              <CardTitle className="text-base sm:text-lg md:text-xl text-white">Product Listings</CardTitle>
+              <CardDescription className="text-[10px] sm:text-xs text-purple-300/70">Review and manage supplier products</CardDescription>
+            </CardHeader>
+            <CardContent className="p-0 sm:p-6">
+              {loading ? (
+                <p className="text-center py-8 text-sm sm:text-base text-purple-300">Loading products...</p>
+              ) : products.length === 0 ? (
+                <div className="text-center py-12">
+                  <Package className="w-16 h-16 mx-auto text-purple-400/50 mb-4" />
+                  <p className="text-purple-400/70 text-sm sm:text-base">No products found</p>
+                  <p className="text-purple-400/50 text-xs sm:text-sm mt-2">Products will appear here once suppliers add them</p>
+                </div>
+              ) : (
+                <div className="overflow-x-auto scrollbar-hide">
+                  <table className="w-full min-w-[900px]">
+                    <thead className="bg-gradient-to-r from-purple-500/20 to-orange-500/20">
+                      <tr>
+                        <th className="px-3 sm:px-4 py-3 text-left text-xs sm:text-sm font-semibold text-purple-300">Product</th>
+                        <th className="px-3 sm:px-4 py-3 text-left text-xs sm:text-sm font-semibold text-purple-300">Supplier</th>
+                        <th className="px-3 sm:px-4 py-3 text-left text-xs sm:text-sm font-semibold text-purple-300">Category</th>
+                        <th className="px-3 sm:px-4 py-3 text-left text-xs sm:text-sm font-semibold text-purple-300">Price</th>
+                        <th className="px-3 sm:px-4 py-3 text-left text-xs sm:text-sm font-semibold text-purple-300">Stock</th>
+                        <th className="px-3 sm:px-4 py-3 text-left text-xs sm:text-sm font-semibold text-purple-300">Status</th>
+                        <th className="px-3 sm:px-4 py-3 text-left text-xs sm:text-sm font-semibold text-purple-300">Added</th>
+                        <th className="px-3 sm:px-4 py-3 text-left text-xs sm:text-sm font-semibold text-purple-300">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-purple-500/10">
+                      {products.map((product) => (
+                        <tr key={product._id} className="hover:bg-purple-500/5 transition-colors group">
+                          <td className="px-3 sm:px-4 py-3">
+                            <div className="flex items-center gap-3">
+                              {product.images && product.images.length > 0 ? (
+                                <img 
+                                  src={product.images[0]} 
+                                  alt={product.name}
+                                  className="w-12 h-12 rounded-lg object-cover border-2 border-purple-500/30"
+                                  onError={(e) => {
+                                    e.currentTarget.src = '';
+                                    e.currentTarget.style.display = 'none';
+                                  }}
+                                />
+                              ) : (
+                                <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500/20 to-orange-500/20 flex items-center justify-center border-2 border-purple-500/30">
+                                  <Package className="w-6 h-6 text-purple-400" />
+                                </div>
+                              )}
+                              <div>
+                                <p className="text-sm font-semibold text-white">{product.name}</p>
+                                <p className="text-xs text-purple-400/70 line-clamp-1">{product.description}</p>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-3 sm:px-4 py-3">
+                            <p className="text-sm font-medium text-white">{product.supplierId.companyName}</p>
+                            <p className="text-xs text-purple-400/70">{product.supplierId.email}</p>
+                          </td>
+                          <td className="px-3 sm:px-4 py-3">
+                            <Badge className="bg-blue-500/20 text-blue-300 border-blue-500/30 text-xs">
+                              {product.category}
+                            </Badge>
+                          </td>
+                          <td className="px-3 sm:px-4 py-3">
+                            <p className="text-sm font-bold text-white">
+                              {product.price.currency} {product.price.amount.toLocaleString()}
+                            </p>
+                            <p className="text-xs text-purple-400/70">per {product.price.unit}</p>
+                          </td>
+                          <td className="px-3 sm:px-4 py-3">
+                            {product.stock.available ? (
+                              <div className="flex items-center gap-1.5 text-green-400">
+                                <CheckCircle className="w-3.5 h-3.5" />
+                                <span className="text-xs font-medium">Available</span>
+                              </div>
+                            ) : (
+                              <div className="flex items-center gap-1.5 text-red-400">
+                                <XCircle className="w-3.5 h-3.5" />
+                                <span className="text-xs font-medium">Out of Stock</span>
+                              </div>
+                            )}
+                            {product.stock.quantity && (
+                              <p className="text-xs text-purple-400/70 mt-0.5">{product.stock.quantity} units</p>
+                            )}
+                          </td>
+                          <td className="px-3 sm:px-4 py-3">
+                            <Badge className={
+                              product.status === 'active'
+                                ? 'bg-purple-500/20 text-purple-300 border-purple-500/30'
+                                : product.status === 'pending'
+                                ? 'bg-orange-500/20 text-orange-300 border-orange-500/30'
+                                : product.status === 'rejected'
+                                ? 'bg-pink-500/20 text-pink-300 border-pink-500/30'
+                                : 'bg-slate-500/20 text-slate-300 border-slate-500/30'
+                            }>
+                              {product.status}
+                            </Badge>
+                          </td>
+                          <td className="px-3 sm:px-4 py-3 text-xs text-purple-300">
+                            {new Date(product.createdAt).toLocaleDateString()}
+                          </td>
+                          <td className="px-3 sm:px-4 py-3">
+                            <div className="flex gap-1.5">
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => {
+                                  setSelectedProduct(product);
+                                  setShowProductDetails(true);
+                                }}
+                                className="hover:bg-blue-500/20 text-blue-300 h-8 w-8 p-0"
+                                title="View Details"
+                              >
+                                <Eye className="w-4 h-4" />
+                              </Button>
+                              {product.status === 'pending' && (
+                                <>
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    onClick={() => handleApproveProduct(product._id)}
+                                    className="hover:bg-green-500/20 text-green-400 h-8 w-8 p-0"
+                                    title="Approve Product"
+                                  >
+                                    <Check className="w-4 h-4" />
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    onClick={() => {
+                                      setSelectedProduct(product);
+                                      setShowRejectDialog(true);
+                                    }}
+                                    className="hover:bg-red-500/20 text-red-400 h-8 w-8 p-0"
+                                    title="Reject Product"
+                                  >
+                                    <X className="w-4 h-4" />
+                                  </Button>
+                                </>
+                              )}
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => handleDeleteProduct(product._id)}
+                                className="hover:bg-red-500/20 text-red-400 h-8 w-8 p-0"
+                                title="Delete Product"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
 
         {/* Supplier Details Dialog */}
         <Dialog open={showDetails} onOpenChange={setShowDetails}>
@@ -1550,13 +1792,179 @@ const AdminDashboard = () => {
           </DialogContent>
         </Dialog>
 
+        {/* Product Details Dialog */}
+        <Dialog open={showProductDetails} onOpenChange={setShowProductDetails}>
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] border-purple-500/30 backdrop-blur-xl">
+            <DialogHeader>
+              <DialogTitle className="text-2xl bg-gradient-to-r from-orange-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">Product Details</DialogTitle>
+              <DialogDescription className="text-purple-300">
+                Complete information about the product listing
+              </DialogDescription>
+            </DialogHeader>
+            {selectedProduct && (
+              <div className="space-y-6">
+                {/* Product Images */}
+                {selectedProduct.images && selectedProduct.images.length > 0 && (
+                  <div>
+                    <h3 className="text-lg font-bold bg-gradient-to-r from-orange-400 to-purple-400 bg-clip-text text-transparent mb-3 border-b border-purple-500/30 pb-2">Product Images</h3>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                      {selectedProduct.images.map((image, index) => (
+                        <img 
+                          key={index}
+                          src={image} 
+                          alt={`${selectedProduct.name} - ${index + 1}`}
+                          className="w-full h-48 object-cover rounded-lg border-2 border-purple-500/30"
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Basic Information */}
+                <div>
+                  <h3 className="text-lg font-bold bg-gradient-to-r from-orange-400 to-purple-400 bg-clip-text text-transparent mb-3 border-b border-purple-500/30 pb-2">Basic Information</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-sm font-semibold text-purple-300">Product Name</label>
+                      <p className="text-white font-medium">{selectedProduct.name}</p>
+                    </div>
+                    <div>
+                      <label className="text-sm font-semibold text-purple-300">Category</label>
+                      <Badge className="mt-1 bg-blue-500/20 text-blue-300 border-blue-500/30">{selectedProduct.category}</Badge>
+                    </div>
+                    <div className="col-span-1 sm:col-span-2">
+                      <label className="text-sm font-semibold text-purple-300">Description</label>
+                      <p className="text-white mt-1">{selectedProduct.description}</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Supplier Information */}
+                <div>
+                  <h3 className="text-lg font-bold bg-gradient-to-r from-orange-400 to-purple-400 bg-clip-text text-transparent mb-3 border-b border-purple-500/30 pb-2">Supplier Information</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-sm font-semibold text-purple-300">Company Name</label>
+                      <p className="text-white font-medium">{selectedProduct.supplierId.companyName}</p>
+                    </div>
+                    <div>
+                      <label className="text-sm font-semibold text-purple-300">Email</label>
+                      <p className="text-white font-medium">{selectedProduct.supplierId.email}</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Price & Stock */}
+                <div>
+                  <h3 className="text-lg font-bold bg-gradient-to-r from-orange-400 to-purple-400 bg-clip-text text-transparent mb-3 border-b border-purple-500/30 pb-2">Price & Stock</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                      <label className="text-sm font-semibold text-purple-300">Price</label>
+                      <p className="text-white font-bold text-lg">{selectedProduct.price.currency} {selectedProduct.price.amount.toLocaleString()}</p>
+                      <p className="text-purple-400/70 text-sm">per {selectedProduct.price.unit}</p>
+                    </div>
+                    <div>
+                      <label className="text-sm font-semibold text-purple-300">Stock Status</label>
+                      <Badge className={selectedProduct.stock.available ? 'bg-green-500/20 text-green-300 border-green-500/30 mt-1' : 'bg-red-500/20 text-red-300 border-red-500/30 mt-1'}>
+                        {selectedProduct.stock.available ? 'Available' : 'Out of Stock'}
+                      </Badge>
+                    </div>
+                    {selectedProduct.stock.quantity && (
+                      <div>
+                        <label className="text-sm font-semibold text-purple-300">Quantity</label>
+                        <p className="text-white font-medium">{selectedProduct.stock.quantity} units</p>
+                      </div>
+                    )}
+                    {selectedProduct.stock.minimumOrder && (
+                      <div>
+                        <label className="text-sm font-semibold text-purple-300">Minimum Order</label>
+                        <p className="text-white font-medium">{selectedProduct.stock.minimumOrder} units</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Status */}
+                <div>
+                  <h3 className="text-lg font-bold bg-gradient-to-r from-orange-400 to-purple-400 bg-clip-text text-transparent mb-3 border-b border-purple-500/30 pb-2">Status</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-sm font-semibold text-purple-300">Current Status</label>
+                      <div className="mt-1">
+                        <Badge className={
+                          selectedProduct.status === 'active'
+                            ? 'bg-purple-500/20 text-purple-300 border-purple-500/30'
+                            : selectedProduct.status === 'pending'
+                            ? 'bg-orange-500/20 text-orange-300 border-orange-500/30'
+                            : selectedProduct.status === 'rejected'
+                            ? 'bg-pink-500/20 text-pink-300 border-pink-500/30'
+                            : 'bg-slate-500/20 text-slate-300 border-slate-500/30'
+                        }>
+                          {selectedProduct.status}
+                        </Badge>
+                      </div>
+                    </div>
+                    <div>
+                      <label className="text-sm font-semibold text-purple-300">Added Date</label>
+                      <p className="text-white font-medium">
+                        {new Date(selectedProduct.createdAt).toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                        })}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Actions */}
+                <div className="flex flex-wrap justify-end gap-3 pt-4 border-t border-purple-500/30">
+                  {selectedProduct.status === 'pending' && (
+                    <>
+                      <Button
+                        className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-lg"
+                        onClick={() => {
+                          handleApproveProduct(selectedProduct._id);
+                          setShowProductDetails(false);
+                        }}
+                      >
+                        <Check className="w-4 h-4 mr-2" />
+                        Approve Product
+                      </Button>
+                      <Button
+                        className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white shadow-lg"
+                        onClick={() => {
+                          setShowProductDetails(false);
+                          setShowRejectDialog(true);
+                        }}
+                      >
+                        <X className="w-4 h-4 mr-2" />
+                        Reject Product
+                      </Button>
+                    </>
+                  )}
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowProductDetails(false)}
+                    className="border-purple-400/50 text-purple-300 hover:bg-purple-500/20"
+                  >
+                    Close
+                  </Button>
+                </div>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
+
         {/* Rejection Dialog */}
         <Dialog open={showRejectDialog} onOpenChange={setShowRejectDialog}>
           <DialogContent className="bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] border-purple-500/30 backdrop-blur-xl">
             <DialogHeader className="border-b border-purple-500/30 pb-4">
-              <DialogTitle className="bg-gradient-to-r from-orange-400 to-red-400 bg-clip-text text-transparent">Reject Supplier Application</DialogTitle>
+              <DialogTitle className="bg-gradient-to-r from-orange-400 to-red-400 bg-clip-text text-transparent">
+                Reject {selectedProduct ? 'Product' : 'Supplier Application'}
+              </DialogTitle>
               <DialogDescription className="text-purple-300">
-                Provide a reason for rejection. This will be sent to the supplier via email.
+                Provide a reason for rejection. This will be sent via email.
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4 pt-4">
@@ -1577,9 +1985,17 @@ const AdminDashboard = () => {
                 </Button>
                 <Button 
                   className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white shadow-lg" 
-                  onClick={handleReject}
+                  onClick={() => {
+                    if (selectedProduct) {
+                      handleRejectProduct(selectedProduct._id, rejectionReason);
+                      setShowRejectDialog(false);
+                      setRejectionReason('');
+                    } else {
+                      handleReject();
+                    }
+                  }}
                 >
-                  Reject Application
+                  Reject {selectedProduct ? 'Product' : 'Application'}
                 </Button>
               </div>
             </div>
