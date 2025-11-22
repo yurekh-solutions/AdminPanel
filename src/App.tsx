@@ -6,7 +6,15 @@ import { ThemeProvider } from '@/components/theme-provider';
 import ScrollToTop from './components/ScrollToTop';
 
 // Admin Pages
-import { AdminLogin, AdminDashboard } from './pages';
+import {
+  AdminLogin,
+  AdminDashboard,
+  BusinessAutomationSuite,
+  AutoReplyManager,
+  LeadScoringAdmin,
+  OrderAutomation,
+  PerformanceAnalytics,
+} from './pages';
 
 function App() {
   return (
@@ -25,6 +33,11 @@ function App() {
             <Route path="/" element={<Navigate to="/login" replace />} />
             <Route path="/login" element={<AdminLogin />} />
             <Route path="/dashboard" element={<AdminDashboard />} />
+            <Route path="/dashboard/automation" element={<BusinessAutomationSuite />} />
+            <Route path="/dashboard/automation/auto-reply" element={<AutoReplyManager />} />
+            <Route path="/dashboard/automation/lead-scoring" element={<LeadScoringAdmin />} />
+            <Route path="/dashboard/automation/order-automation" element={<OrderAutomation />} />
+            <Route path="/dashboard/automation/analytics" element={<PerformanceAnalytics />} />
             <Route path="*" element={<Navigate to="/login" replace />} />
           </Routes>
         </BrowserRouter>

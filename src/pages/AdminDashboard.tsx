@@ -572,9 +572,9 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
         {/* Quick Actions Bar */}
-        <div className="mb-4 sm:mb-6">
+        <div className="mb-6 sm:mb-8">
           <Card className="border border-purple-500/20 bg-gradient-to-r from-[#2d1b3d] via-[#1f1529] to-[#2d1b3d] backdrop-blur-xl hover:border-purple-400/40 transition-all">
             <CardContent className="p-3 sm:p-4">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
@@ -587,7 +587,7 @@ const AdminDashboard = () => {
                     <p className="text-xs text-slate-400 hidden sm:block">Manage your dashboard efficiently</p>
                   </div>
                 </div>
-                <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2">
                   <Button
                     size="sm"
                     variant="outline"
@@ -602,6 +602,15 @@ const AdminDashboard = () => {
                     <RefreshCw className="w-4 h-4 mr-2 group-hover:rotate-180 transition-transform duration-500" />
                     <span className="hidden sm:inline">Refresh Data</span>
                     <span className="sm:hidden">Refresh</span>
+                  </Button>
+                  <Button
+                    size="sm"
+                    className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transition-all"
+                    onClick={() => navigate('/dashboard/automation')}
+                  >
+                    <Zap className="w-4 h-4 mr-2" />
+                    <span className="hidden sm:inline">Automation Suite</span>
+                    <span className="sm:hidden">Automation</span>
                   </Button>
                   <Button
                     size="sm"
@@ -620,7 +629,7 @@ const AdminDashboard = () => {
         </div>
 
         {/* Statistics Cards */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-6 mb-4 sm:mb-6 lg:mb-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6 mb-6 sm:mb-8 lg:mb-10">
           <Card className="border border-purple-500/20 shadow-xl hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl">
             <CardHeader className="pb-2 sm:pb-3">
               <div className="flex items-center justify-between">
@@ -695,13 +704,13 @@ const AdminDashboard = () => {
         </div>
 
         {/* Tab Switcher */}
-        <div className="mb-6">
+        <div className="mb-8 sm:mb-10">
           <Card className="border border-purple-500/20 shadow-xl bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl">
-            <CardContent className="p-2">
-              <div className="flex gap-2">
+            <CardContent className="p-3 sm:p-4">
+              <div className="flex gap-3 sm:gap-4">
                 <Button
                   onClick={() => setActiveTab('suppliers')}
-                  className={`flex-1 h-12 font-semibold transition-all duration-300 ${
+                  className={`flex-1 h-11 sm:h-12 font-semibold transition-all duration-300 ${
                     activeTab === 'suppliers'
                       ? 'bg-gradient-to-r from-purple-600 to-orange-600 text-white shadow-lg shadow-purple-500/50'
                       : 'bg-transparent text-purple-300 hover:bg-purple-500/20 border border-purple-500/30'
@@ -715,7 +724,7 @@ const AdminDashboard = () => {
                 </Button>
                 <Button
                   onClick={() => setActiveTab('products')}
-                  className={`flex-1 h-12 font-semibold transition-all duration-300 ${
+                  className={`flex-1 h-11 sm:h-12 font-semibold transition-all duration-300 ${
                     activeTab === 'products'
                       ? 'bg-gradient-to-r from-purple-600 to-orange-600 text-white shadow-lg shadow-purple-500/50'
                       : 'bg-transparent text-purple-300 hover:bg-purple-500/20 border border-purple-500/30'
@@ -738,7 +747,7 @@ const AdminDashboard = () => {
         {activeTab === 'suppliers' && (
           <>
         {/* Analytics Charts */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 lg:gap-6 mb-4 sm:mb-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 mb-6 sm:mb-8 lg:mb-10">
           {/* Status Distribution Pie Chart */}
           <Card className="border border-purple-500/20 shadow-2xl bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl overflow-hidden">
             <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent"></div>
@@ -967,13 +976,13 @@ const AdminDashboard = () => {
         </div>
 
         {/* Recent Activity Timeline */}
-        <div className="mb-6">
+        <div className="mb-8 sm:mb-10">
           <Card className="border border-purple-500/20 shadow-2xl bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl overflow-hidden">
             <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent"></div>
-            <CardHeader className="border-b border-purple-500/20">
+            <CardHeader className="border-b border-purple-500/20 pb-4 sm:pb-6">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-blue-500/30 flex items-center justify-center">
+                <div className="flex items-center gap-3 sm:gap-4">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-blue-500/30 flex items-center justify-center">
                     <Clock className="w-5 h-5 text-blue-400" />
                   </div>
                   <div>
