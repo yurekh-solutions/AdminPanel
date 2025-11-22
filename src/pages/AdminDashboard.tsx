@@ -386,7 +386,6 @@ const AdminDashboard = () => {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
         },
       });
 
@@ -399,7 +398,9 @@ const AdminDashboard = () => {
       if (data.success) {
         toast({
           title: 'Success',
-          description: 'Supplier approved successfully',
+          description: data.emailSent === false 
+            ? 'Supplier approved but email failed to send. Check email configuration.' 
+            : 'Supplier approved successfully',
         });
         fetchSuppliers();
         fetchStatistics();
@@ -445,7 +446,9 @@ const AdminDashboard = () => {
       if (data.success) {
         toast({
           title: 'Success',
-          description: 'Supplier rejected',
+          description: data.emailSent === false 
+            ? 'Supplier rejected but email failed to send. Check email configuration.' 
+            : 'Supplier rejected',
         });
         setShowRejectDialog(false);
         setRejectionReason('');
