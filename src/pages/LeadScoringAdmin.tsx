@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Target,
@@ -29,69 +29,68 @@ const LeadScoringAdmin = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
+  const [leads, setLeads] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const [leads, setLeads] = useState([
-    {
-      id: '1',
-      company: 'ABC Manufacturing',
-      contact: 'John Smith',
-      email: 'john@abcmfg.com',
-      score: 95,
-      status: 'hot',
-      engagement: 'high',
-      inquiries: 12,
-      lastContact: '2 hours ago',
-      potential: '₹5,00,000',
-    },
-    {
-      id: '2',
-      company: 'XYZ Industries',
-      contact: 'Sarah Johnson',
-      email: 'sarah@xyzind.com',
-      score: 78,
-      status: 'warm',
-      engagement: 'medium',
-      inquiries: 8,
-      lastContact: '1 day ago',
-      potential: '₹2,50,000',
-    },
-    {
-      id: '3',
-      company: 'Tech Solutions Ltd',
-      contact: 'Mike Chen',
-      email: 'mike@techsol.com',
-      score: 62,
-      status: 'warm',
-      engagement: 'medium',
-      inquiries: 5,
-      lastContact: '3 days ago',
-      potential: '₹1,50,000',
-    },
-    {
-      id: '4',
-      company: 'Global Traders',
-      contact: 'Emma Davis',
-      email: 'emma@global.com',
-      score: 45,
-      status: 'cold',
-      engagement: 'low',
-      inquiries: 2,
-      lastContact: '1 week ago',
-      potential: '₹75,000',
-    },
-    {
-      id: '5',
-      company: 'Prime Wholesale',
-      contact: 'David Wilson',
-      email: 'david@prime.com',
-      score: 88,
-      status: 'hot',
-      engagement: 'high',
-      inquiries: 15,
-      lastContact: '30 minutes ago',
-      potential: '₹4,00,000',
-    },
-  ]);
+  useEffect(() => {
+    fetchLeads();
+  }, []);
+
+  const fetchLeads = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem('adminToken');
+      const response = await fetch('http://localhost:5000/api/admin/automation/leads', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.status === 401) {
+        toast({
+          title: 'Session Expired',
+          description: 'Please login again',
+          variant: 'destructive'
+        });
+        navigate('/login');
+        return;
+      }
+
+      const data = await response.json();
+      if (data.success && data.data) {
+        // Transform MongoDB data to component format
+        const transformedLeads = data.data.map((lead: any) => ({
+          id: lead._id,
+          company: lead.company || 'Unknown',
+          contact: lead.contact || 'N/A',
+          email: lead.email || 'N/A',
+          score: lead.score || 0,
+          status: getStatusFromScore(lead.score || 0),
+          engagement: lead.engagement || 'medium',
+          inquiries: lead.inquiries || 0,
+          lastContact: lead.lastContact || 'N/A',
+          potential: `₹${(lead.potential || 0).toLocaleString()}`,
+        }));
+        setLeads(transformedLeads);
+      }
+    } catch (error) {
+      console.error('Failed to fetch leads:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to load leads',
+        variant: 'destructive'
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getStatusFromScore = (score: number): string => {
+    if (score >= 80) return 'hot';
+    if (score >= 60) return 'warm';
+    return 'cold';
+  };
 
   const getScoreColor = (score: number) => {
     if (score >= 80) return 'from-green-500 to-emerald-500';
@@ -262,6 +261,14 @@ const LeadScoringAdmin = () => {
         </div>
 
         {/* Leads Table - Responsive */}
+        {loading ? (
+          <div className="flex items-center justify-center py-12">
+            <div className="text-center">
+              <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500 mb-4"></div>
+              <p className="text-slate-400">Loading leads...</p>
+            </div>
+          </div>
+        ) : filteredLeads.length > 0 ? (
         <div className="space-y-4">
           {filteredLeads.map((lead) => (
             <Card
@@ -340,15 +347,15 @@ const LeadScoringAdmin = () => {
             </Card>
           ))}
         </div>
-
-        {filteredLeads.length === 0 && (
+        ) : (
           <Card className="border border-purple-500/20 bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl">
             <CardContent className="p-12 text-center">
               <AlertCircle className="w-12 h-12 mx-auto text-purple-400/50 mb-4" />
               <p className="text-slate-400">No leads found</p>
             </CardContent>
           </Card>
-        )}
+        )
+        }
       </div>
     </div>
   );

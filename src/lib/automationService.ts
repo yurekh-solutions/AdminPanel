@@ -48,13 +48,18 @@ interface AutomationStats {
 export const getAutomationStats = async (token: string): Promise<AutomationStats> => {
   try {
     const response = await fetch(`${API_URL}/admin/automation/stats`, {
+      method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
       },
     });
 
     if (!response.ok) {
-      throw new Error('Failed to fetch automation stats');
+      if (response.status === 401) {
+        throw new Error('401 Unauthorized - Session expired');
+      }
+      throw new Error(`Failed to fetch automation stats: ${response.statusText}`);
     }
 
     const data = await response.json();
@@ -83,10 +88,14 @@ export const autoReplyService = {
     });
 
     if (!response.ok) {
-      throw new Error('Failed to create auto-reply');
+      if (response.status === 401) {
+        throw new Error('401 Unauthorized - Session expired');
+      }
+      throw new Error(`Failed to create auto-reply: ${response.statusText}`);
     }
 
-    return response.json();
+    const data = await response.json();
+    return data.data || data;
   },
 
   /**
@@ -103,10 +112,14 @@ export const autoReplyService = {
     });
 
     if (!response.ok) {
-      throw new Error('Failed to update auto-reply');
+      if (response.status === 401) {
+        throw new Error('401 Unauthorized - Session expired');
+      }
+      throw new Error(`Failed to update auto-reply: ${response.statusText}`);
     }
 
-    return response.json();
+    const data = await response.json();
+    return data.data || data;
   },
 
   /**
@@ -121,7 +134,10 @@ export const autoReplyService = {
     });
 
     if (!response.ok) {
-      throw new Error('Failed to delete auto-reply');
+      if (response.status === 401) {
+        throw new Error('401 Unauthorized - Session expired');
+      }
+      throw new Error(`Failed to delete auto-reply: ${response.statusText}`);
     }
   },
 
@@ -132,11 +148,15 @@ export const autoReplyService = {
     const response = await fetch(`${API_URL}/admin/automation/auto-replies`, {
       headers: {
         'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
       },
     });
 
     if (!response.ok) {
-      throw new Error('Failed to fetch auto-replies');
+      if (response.status === 401) {
+        throw new Error('401 Unauthorized - Session expired');
+      }
+      throw new Error(`Failed to fetch auto-replies: ${response.statusText}`);
     }
 
     const data = await response.json();
@@ -155,11 +175,15 @@ export const leadScoringService = {
     const response = await fetch(`${API_URL}/admin/automation/leads`, {
       headers: {
         'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
       },
     });
 
     if (!response.ok) {
-      throw new Error('Failed to fetch leads');
+      if (response.status === 401) {
+        throw new Error('401 Unauthorized - Session expired');
+      }
+      throw new Error(`Failed to fetch leads: ${response.statusText}`);
     }
 
     const data = await response.json();
@@ -173,14 +197,19 @@ export const leadScoringService = {
     const response = await fetch(`${API_URL}/admin/automation/leads/${id}`, {
       headers: {
         'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
       },
     });
 
     if (!response.ok) {
-      throw new Error('Failed to fetch lead');
+      if (response.status === 401) {
+        throw new Error('401 Unauthorized - Session expired');
+      }
+      throw new Error(`Failed to fetch lead: ${response.statusText}`);
     }
 
-    return response.json();
+    const data = await response.json();
+    return data.data || data;
   },
 
   /**
@@ -196,7 +225,10 @@ export const leadScoringService = {
     });
 
     if (!response.ok) {
-      throw new Error('Failed to assign lead');
+      if (response.status === 401) {
+        throw new Error('401 Unauthorized - Session expired');
+      }
+      throw new Error(`Failed to assign lead: ${response.statusText}`);
     }
   },
 
@@ -212,7 +244,10 @@ export const leadScoringService = {
     });
 
     if (!response.ok) {
-      throw new Error('Failed to rescore lead');
+      if (response.status === 401) {
+        throw new Error('401 Unauthorized - Session expired');
+      }
+      throw new Error(`Failed to rescore lead: ${response.statusText}`);
     }
 
     const data = await response.json();
@@ -235,11 +270,15 @@ export const orderAutomationService = {
     const response = await fetch(url, {
       headers: {
         'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
       },
     });
 
     if (!response.ok) {
-      throw new Error('Failed to fetch orders');
+      if (response.status === 401) {
+        throw new Error('401 Unauthorized - Session expired');
+      }
+      throw new Error(`Failed to fetch orders: ${response.statusText}`);
     }
 
     const data = await response.json();
@@ -250,19 +289,24 @@ export const orderAutomationService = {
    * Auto-process order
    */
   autoProcess: async (token: string, orderId: string): Promise<Order> => {
-    const response = await fetch(`${API_URL}/admin/automation/orders/${orderId}/auto-process`, {
-      method: 'POST',
+    const response = await fetch(`${API_URL}/admin/automation/orders/${orderId}`, {
+      method: 'PUT',
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
+      body: JSON.stringify({ status: 'processing' }),
     });
 
     if (!response.ok) {
-      throw new Error('Failed to auto-process order');
+      if (response.status === 401) {
+        throw new Error('401 Unauthorized - Session expired');
+      }
+      throw new Error(`Failed to auto-process order: ${response.statusText}`);
     }
 
-    return response.json();
+    const data = await response.json();
+    return data.data || data;
   },
 
   /**
@@ -272,14 +316,19 @@ export const orderAutomationService = {
     const response = await fetch(`${API_URL}/admin/automation/orders/${id}`, {
       headers: {
         'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
       },
     });
 
     if (!response.ok) {
-      throw new Error('Failed to fetch order');
+      if (response.status === 401) {
+        throw new Error('401 Unauthorized - Session expired');
+      }
+      throw new Error(`Failed to fetch order: ${response.statusText}`);
     }
 
-    return response.json();
+    const data = await response.json();
+    return data.data || data;
   },
 
   /**
@@ -296,10 +345,14 @@ export const orderAutomationService = {
     });
 
     if (!response.ok) {
-      throw new Error('Failed to update order status');
+      if (response.status === 401) {
+        throw new Error('401 Unauthorized - Session expired');
+      }
+      throw new Error(`Failed to update order status: ${response.statusText}`);
     }
 
-    return response.json();
+    const data = await response.json();
+    return data.data || data;
   },
 };
 
@@ -326,10 +379,14 @@ export const emailCampaignService = {
     });
 
     if (!response.ok) {
-      throw new Error('Failed to send email campaign');
+      if (response.status === 401) {
+        throw new Error('401 Unauthorized - Session expired');
+      }
+      throw new Error(`Failed to send email campaign: ${response.statusText}`);
     }
 
-    return response.json();
+    const data = await response.json();
+    return data.data || data;
   },
 
   /**
@@ -339,11 +396,15 @@ export const emailCampaignService = {
     const response = await fetch(`${API_URL}/admin/automation/email-templates`, {
       headers: {
         'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
       },
     });
 
     if (!response.ok) {
-      throw new Error('Failed to fetch email templates');
+      if (response.status === 401) {
+        throw new Error('401 Unauthorized - Session expired');
+      }
+      throw new Error(`Failed to fetch email templates: ${response.statusText}`);
     }
 
     const data = await response.json();
@@ -369,10 +430,14 @@ export const emailCampaignService = {
     });
 
     if (!response.ok) {
-      throw new Error('Failed to create email template');
+      if (response.status === 401) {
+        throw new Error('401 Unauthorized - Session expired');
+      }
+      throw new Error(`Failed to create email template: ${response.statusText}`);
     }
 
-    return response.json();
+    const data = await response.json();
+    return data.data || data;
   },
 };
 
@@ -387,14 +452,19 @@ export const analyticsService = {
     const response = await fetch(`${API_URL}/admin/automation/metrics`, {
       headers: {
         'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
       },
     });
 
     if (!response.ok) {
-      throw new Error('Failed to fetch metrics');
+      if (response.status === 401) {
+        throw new Error('401 Unauthorized - Session expired');
+      }
+      throw new Error(`Failed to fetch metrics: ${response.statusText}`);
     }
 
-    return response.json();
+    const data = await response.json();
+    return data.data || data;
   },
 
   /**
@@ -404,14 +474,19 @@ export const analyticsService = {
     const response = await fetch(`${API_URL}/admin/automation/performance?period=${period}`, {
       headers: {
         'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
       },
     });
 
     if (!response.ok) {
-      throw new Error('Failed to fetch performance report');
+      if (response.status === 401) {
+        throw new Error('401 Unauthorized - Session expired');
+      }
+      throw new Error(`Failed to fetch performance report: ${response.statusText}`);
     }
 
-    return response.json();
+    const data = await response.json();
+    return data.data || data;
   },
 
   /**
@@ -421,14 +496,67 @@ export const analyticsService = {
     const response = await fetch(`${API_URL}/admin/automation/health`, {
       headers: {
         'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
       },
     });
 
     if (!response.ok) {
-      throw new Error('Failed to fetch system health');
+      if (response.status === 401) {
+        throw new Error('401 Unauthorized - Session expired');
+      }
+      throw new Error(`Failed to fetch system health: ${response.statusText}`);
     }
 
-    return response.json();
+    const data = await response.json();
+    return data.data || data;
+  },
+};
+
+/**
+ * Smart Inventory Service
+ */
+export const smartInventoryService = {
+  getInventory: async (token: string): Promise<any[]> => {
+    const response = await fetch(`${API_URL}/admin/automation/inventory`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      if (response.status === 401) {
+        throw new Error('401 Unauthorized - Session expired');
+      }
+      throw new Error(`Failed to fetch inventory: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data.data || [];
+  },
+};
+
+/**
+ * Price Optimizer Service
+ */
+export const priceOptimizerService = {
+  getPricing: async (token: string): Promise<any[]> => {
+    const response = await fetch(`${API_URL}/admin/automation/pricing`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      if (response.status === 401) {
+        throw new Error('401 Unauthorized - Session expired');
+      }
+      throw new Error(`Failed to fetch pricing data: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data.data || [];
   },
 };
 
@@ -439,4 +567,6 @@ export default {
   orderAutomationService,
   emailCampaignService,
   analyticsService,
+  smartInventoryService,
+  priceOptimizerService,
 };

@@ -14,6 +14,8 @@ import {
   LeadScoringAdmin,
   OrderAutomation,
   PerformanceAnalytics,
+  SmartInventory,
+  PriceOptimizer,
 } from './pages';
 
 function App() {
@@ -38,6 +40,8 @@ function App() {
             <Route path="/dashboard/automation/lead-scoring" element={<LeadScoringAdmin />} />
             <Route path="/dashboard/automation/order-automation" element={<OrderAutomation />} />
             <Route path="/dashboard/automation/analytics" element={<PerformanceAnalytics />} />
+            <Route path="/dashboard/automation/inventory" element={<SmartInventory />} />
+            <Route path="/dashboard/automation/pricing" element={<PriceOptimizer />} />
             <Route path="*" element={<Navigate to="/login" replace />} />
           </Routes>
         </BrowserRouter>
