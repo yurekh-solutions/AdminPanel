@@ -804,14 +804,14 @@ const AdminDashboard = () => {
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="pt-6 pb-4">
+            <CardContent className="pt-6 pb-4 flex justify-center items-center">
               <ChartContainer
                 config={{
                   pending: { label: 'Pending', color: '#f97316' },
                   approved: { label: 'Approved', color: '#8b5cf6' },
                   rejected: { label: 'Rejected', color: '#ec4899' },
                 }}
-                className="h-[280px] sm:h-[320px]"
+                className="h-[280px] sm:h-[320px] w-full max-w-xs mx-auto"
               >
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
@@ -856,8 +856,8 @@ const AdminDashboard = () => {
                           </text>
                         );
                       }}
-                      outerRadius={window.innerWidth < 640 ? 90 : 110}
-                      innerRadius={window.innerWidth < 640 ? 45 : 55}
+                      outerRadius={window.innerWidth < 640 ? 80 : 100}
+                      innerRadius={window.innerWidth < 640 ? 40 : 50}
                       paddingAngle={2}
                       dataKey="value"
                     >
