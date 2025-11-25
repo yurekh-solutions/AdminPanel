@@ -804,14 +804,14 @@ const AdminDashboard = () => {
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="pt-6 pb-4 flex justify-center items-center">
+            <CardContent className="pt-4 sm:pt-6 pb-4 sm:pb-6 flex flex-col">
               <ChartContainer
                 config={{
                   pending: { label: 'Pending', color: '#f97316' },
                   approved: { label: 'Approved', color: '#8b5cf6' },
                   rejected: { label: 'Rejected', color: '#ec4899' },
                 }}
-                className="h-[280px] sm:h-[320px] w-full max-w-xs mx-auto"
+                className="h-[240px] sm:h-[280px] w-full"
               >
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
@@ -856,8 +856,8 @@ const AdminDashboard = () => {
                           </text>
                         );
                       }}
-                      outerRadius={window.innerWidth < 640 ? 80 : 100}
-                      innerRadius={window.innerWidth < 640 ? 40 : 50}
+                      outerRadius={window.innerWidth < 640 ? 70 : 85}
+                      innerRadius={window.innerWidth < 640 ? 35 : 42}
                       paddingAngle={2}
                       dataKey="value"
                     >
@@ -885,19 +885,24 @@ const AdminDashboard = () => {
                   </PieChart>
                 </ResponsiveContainer>
               </ChartContainer>
-              {/* Legend */}
-              <div className="flex flex-wrap justify-center gap-2 sm:gap-3 md:gap-4 mt-3 sm:mt-4 px-2">
-                <div className="flex items-center gap-1.5 sm:gap-2">
-                  <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-gradient-to-br from-orange-500 to-orange-600 flex-shrink-0"></div>
-                  <span className="text-[10px] sm:text-xs text-slate-300 whitespace-nowrap">Pending ({statistics.pending})</span>
-                </div>
-                <div className="flex items-center gap-1.5 sm:gap-2">
-                  <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-gradient-to-br from-purple-500 to-purple-600 flex-shrink-0"></div>
-                  <span className="text-[10px] sm:text-xs text-slate-300 whitespace-nowrap">Approved ({statistics.approved})</span>
-                </div>
-                <div className="flex items-center gap-1.5 sm:gap-2">
-                  <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-gradient-to-br from-pink-500 to-pink-600 flex-shrink-0"></div>
-                  <span className="text-[10px] sm:text-xs text-slate-300 whitespace-nowrap">Rejected ({statistics.rejected})</span>
+              {/* Legend at Bottom */}
+              <div className="mt-6 sm:mt-8 w-full">
+                <div className="grid grid-cols-3 gap-3 sm:gap-4">
+                  <div className="flex flex-col items-center text-center">
+                    <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-orange-500 to-orange-600 mb-2"></div>
+                    <span className="text-[10px] sm:text-xs font-semibold text-white">Pending</span>
+                    <span className="text-[12px] sm:text-sm font-bold text-orange-400">{statistics.pending}</span>
+                  </div>
+                  <div className="flex flex-col items-center text-center">
+                    <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-purple-500 to-purple-600 mb-2"></div>
+                    <span className="text-[10px] sm:text-xs font-semibold text-white">Approved</span>
+                    <span className="text-[12px] sm:text-sm font-bold text-purple-400">{statistics.approved}</span>
+                  </div>
+                  <div className="flex flex-col items-center text-center">
+                    <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-pink-500 to-pink-600 mb-2"></div>
+                    <span className="text-[10px] sm:text-xs font-semibold text-white">Rejected</span>
+                    <span className="text-[12px] sm:text-sm font-bold text-pink-400">{statistics.rejected}</span>
+                  </div>
                 </div>
               </div>
             </CardContent>
