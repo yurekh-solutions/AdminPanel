@@ -886,18 +886,18 @@ const AdminDashboard = () => {
                 </ResponsiveContainer>
               </ChartContainer>
               {/* Legend */}
-              <div className="flex flex-wrap justify-center gap-4 mt-4">
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-gradient-to-br from-orange-500 to-orange-600"></div>
-                  <span className="text-xs text-slate-300">Pending ({statistics.pending})</span>
+              <div className="flex flex-wrap justify-center gap-2 sm:gap-3 md:gap-4 mt-3 sm:mt-4 px-2">
+                <div className="flex items-center gap-1.5 sm:gap-2">
+                  <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-gradient-to-br from-orange-500 to-orange-600 flex-shrink-0"></div>
+                  <span className="text-[10px] sm:text-xs text-slate-300 whitespace-nowrap">Pending ({statistics.pending})</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-gradient-to-br from-purple-500 to-purple-600"></div>
-                  <span className="text-xs text-slate-300">Approved ({statistics.approved})</span>
+                <div className="flex items-center gap-1.5 sm:gap-2">
+                  <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-gradient-to-br from-purple-500 to-purple-600 flex-shrink-0"></div>
+                  <span className="text-[10px] sm:text-xs text-slate-300 whitespace-nowrap">Approved ({statistics.approved})</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-gradient-to-br from-pink-500 to-pink-600"></div>
-                  <span className="text-xs text-slate-300">Rejected ({statistics.rejected})</span>
+                <div className="flex items-center gap-1.5 sm:gap-2">
+                  <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-gradient-to-br from-pink-500 to-pink-600 flex-shrink-0"></div>
+                  <span className="text-[10px] sm:text-xs text-slate-300 whitespace-nowrap">Rejected ({statistics.rejected})</span>
                 </div>
               </div>
             </CardContent>
@@ -1418,48 +1418,48 @@ const AdminDashboard = () => {
 
         {/* RFQ Section */}
         {activeTab === 'rfq' && (
-          <Card className="border border-purple-500/20 shadow-2xl bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl">
-            <CardHeader className="bg-gradient-to-r from-purple-500/10 to-orange-500/10 border-b border-purple-500/20">
-              <CardTitle className="text-sm sm:text-base md:text-lg text-white">RFQ Requests</CardTitle>
-              <CardDescription className="text-[9px] sm:text-xs text-purple-300/70">Manage customer requests for quotes</CardDescription>
+          <Card className="border border-purple-500/20 shadow-2xl bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl overflow-hidden">
+            <CardHeader className="bg-gradient-to-r from-purple-500/10 to-orange-500/10 border-b border-purple-500/20 px-3 sm:px-4 md:px-6 py-3 sm:py-4">
+              <CardTitle className="text-xs sm:text-sm md:text-base text-white font-bold">RFQ Requests</CardTitle>
+              <CardDescription className="text-[8px] sm:text-xs text-purple-300/70 mt-1">Manage customer requests for quotes</CardDescription>
             </CardHeader>
-            <CardContent className="p-2 sm:p-4 md:p-6">
+            <CardContent className="p-2 sm:p-3 md:p-4 overflow-hidden">
               {rfqs.length === 0 ? (
                 <div className="text-center py-12">
                   <FileText className="w-12 h-12 sm:w-16 sm:h-16 mx-auto text-purple-400/50 mb-3 sm:mb-4" />
                   <p className="text-purple-400/70 text-xs sm:text-base">No RFQs found</p>
                 </div>
               ) : (
-                <div className="w-full overflow-x-auto scrollbar-hide">
-                  <table className="w-full text-xs sm:text-sm">
+                <div className="w-full overflow-x-auto scrollbar-hide -mx-2 sm:-mx-3 md:-mx-4">
+                  <table className="w-full text-[11px] sm:text-xs md:text-sm">
                     <thead className="bg-gradient-to-r from-purple-500/20 to-orange-500/20 sticky top-0">
                       <tr>
-                        <th className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 text-left font-semibold text-purple-300 whitespace-nowrap">Customer</th>
-                        <th className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 text-left font-semibold text-purple-300 whitespace-nowrap hidden sm:table-cell">Product</th>
-                        <th className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 text-left font-semibold text-purple-300 whitespace-nowrap hidden md:table-cell">Qty</th>
-                        <th className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 text-left font-semibold text-purple-300 whitespace-nowrap hidden lg:table-cell">Location</th>
-                        <th className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 text-left font-semibold text-purple-300 whitespace-nowrap">Status</th>
-                        <th className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 text-left font-semibold text-purple-300 whitespace-nowrap hidden sm:table-cell">Date</th>
+                        <th className="px-2 sm:px-3 md:px-4 py-2 sm:py-3 text-left font-semibold text-purple-300 whitespace-nowrap">Customer</th>
+                        <th className="px-2 sm:px-3 md:px-4 py-2 sm:py-3 text-left font-semibold text-purple-300 whitespace-nowrap hidden sm:table-cell">Product</th>
+                        <th className="px-2 sm:px-3 md:px-4 py-2 sm:py-3 text-left font-semibold text-purple-300 whitespace-nowrap hidden md:table-cell">Qty</th>
+                        <th className="px-2 sm:px-3 md:px-4 py-2 sm:py-3 text-left font-semibold text-purple-300 whitespace-nowrap hidden lg:table-cell">Location</th>
+                        <th className="px-2 sm:px-3 md:px-4 py-2 sm:py-3 text-left font-semibold text-purple-300 whitespace-nowrap">Status</th>
+                        <th className="px-2 sm:px-3 md:px-4 py-2 sm:py-3 text-left font-semibold text-purple-300 whitespace-nowrap hidden sm:table-cell">Date</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-purple-500/10">
                       {rfqs.map((rfq) => (
                         <tr key={rfq._id} className="hover:bg-purple-500/10 transition-colors cursor-pointer" onClick={() => { setSelectedRFQ(rfq); setShowRFQDetails(true); }}>
-                          <td className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3">
-                            <div>
-                              <p className="text-xs sm:text-sm font-semibold text-white">{rfq.customerName}</p>
+                          <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
+                            <div className="min-w-0">
+                              <p className="text-[11px] sm:text-xs font-semibold text-white truncate">{rfq.customerName}</p>
                               <p className="text-[9px] sm:text-xs text-purple-400/70 truncate">{rfq.email}</p>
                             </div>
                           </td>
-                          <td className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 hidden sm:table-cell text-[10px] sm:text-xs text-white">{rfq.productName}</td>
-                          <td className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 hidden md:table-cell text-[10px] sm:text-xs text-white">{rfq.quantity}</td>
-                          <td className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 hidden lg:table-cell text-[10px] sm:text-xs text-purple-300">{rfq.deliveryLocation}</td>
-                          <td className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3">
-                            <Badge className={rfq.status === 'pending' ? 'bg-orange-500/20 text-orange-300 border-orange-500/30' : rfq.status === 'quoted' ? 'bg-blue-500/20 text-blue-300 border-blue-500/30' : rfq.status === 'accepted' ? 'bg-green-500/20 text-green-300 border-green-500/30' : 'bg-pink-500/20 text-pink-300 border-pink-500/30'}>
+                          <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3 hidden sm:table-cell text-[10px] sm:text-xs text-white truncate">{rfq.productName}</td>
+                          <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3 hidden md:table-cell text-[10px] sm:text-xs text-white text-center">{rfq.quantity}</td>
+                          <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3 hidden lg:table-cell text-[10px] sm:text-xs text-purple-300 truncate">{rfq.deliveryLocation}</td>
+                          <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
+                            <Badge className={`text-[10px] sm:text-xs py-0.5 px-1.5 ${rfq.status === 'pending' ? 'bg-orange-500/20 text-orange-300 border-orange-500/30' : rfq.status === 'quoted' ? 'bg-blue-500/20 text-blue-300 border-blue-500/30' : rfq.status === 'accepted' ? 'bg-green-500/20 text-green-300 border-green-500/30' : 'bg-pink-500/20 text-pink-300 border-pink-500/30'}`}>
                               {rfq.status}
                             </Badge>
                           </td>
-                          <td className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3 hidden sm:table-cell text-[9px] sm:text-xs text-purple-300">{new Date(rfq.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</td>
+                          <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3 hidden sm:table-cell text-[9px] sm:text-xs text-purple-300 whitespace-nowrap">{new Date(rfq.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</td>
                         </tr>
                       ))}
                     </tbody>
