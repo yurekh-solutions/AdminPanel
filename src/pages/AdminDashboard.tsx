@@ -136,8 +136,10 @@ const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [selectedSupplier, setSelectedSupplier] = useState<Supplier | null>(null);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [selectedRFQ, setSelectedRFQ] = useState<any | null>(null);
   const [showDetails, setShowDetails] = useState(false);
   const [showProductDetails, setShowProductDetails] = useState(false);
+  const [showRFQDetails, setShowRFQDetails] = useState(false);
   const [showRejectDialog, setShowRejectDialog] = useState(false);
   const [rejectionReason, setRejectionReason] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
@@ -179,12 +181,15 @@ const AdminDashboard = () => {
   
   const fetchRFQs = async () => {
     try {
-      const response = await fetch(`${API_URL}/rfqs`, {
+      const response = await fetch(`${API_URL}/admin/rfqs`, {
         headers: { 'Authorization': `Bearer ${token}` },
       });
       if (response.ok) {
         const data = await response.json();
         setRfqs(data.data || data.rfqs || []);
+        console.log('RFQs loaded:', data.data?.length || 0);
+      } else {
+        console.error('Failed to fetch RFQs:', response.status);
       }
     } catch (error) {
       console.error('Error fetching RFQs:', error);
@@ -1437,7 +1442,7 @@ const AdminDashboard = () => {
                     </thead>
                     <tbody className="divide-y divide-purple-500/10">
                       {rfqs.map((rfq) => (
-                        <tr key={rfq._id} className="hover:bg-purple-500/5 transition-colors">
+                        <tr key={rfq._id} className="hover:bg-purple-500/10 transition-colors cursor-pointer" onClick={() => { setSelectedRFQ(rfq); setShowRFQDetails(true); }}>
                           <td className="px-2 sm:px-3 lg:px-4 py-2 sm:py-3">
                             <div>
                               <p className="text-xs sm:text-sm font-semibold text-white">{rfq.customerName}</p>
@@ -2095,6 +2100,48 @@ const AdminDashboard = () => {
                 </Button>
               </div>
             </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* RFQ Details Modal */}
+        <Dialog open={showRFQDetails} onOpenChange={setShowRFQDetails}>
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] border-purple-500/30 backdrop-blur-xl">
+            <DialogHeader>
+              <DialogTitle className="text-2xl bg-gradient-to-r from-orange-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">RFQ Details</DialogTitle>
+              <DialogDescription className="text-purple-300">Complete request for quotation information</DialogDescription>
+            </DialogHeader>
+            {selectedRFQ && (
+              <div className="space-y-6 pt-4">
+                <div>
+                  <h3 className="text-lg font-bold bg-gradient-to-r from-orange-400 to-purple-400 bg-clip-text text-transparent mb-3 border-b border-purple-500/30 pb-2">Customer Information</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div><label className="text-sm font-semibold text-purple-300">Name</label><p className="text-white font-medium">{selectedRFQ.customerName}</p></div>
+                    <div><label className="text-sm font-semibold text-purple-300">Email</label><p className="text-white font-medium break-all">{selectedRFQ.email}</p></div>
+                    <div><label className="text-sm font-semibold text-purple-300">Phone</label><p className="text-white font-medium">{selectedRFQ.phone}</p></div>
+                    <div><label className="text-sm font-semibold text-purple-300">Company</label><p className="text-white font-medium">{selectedRFQ.company || 'Not specified'}</p></div>
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold bg-gradient-to-r from-orange-400 to-purple-400 bg-clip-text text-transparent mb-3 border-b border-purple-500/30 pb-2">Product & Delivery</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div><label className="text-sm font-semibold text-purple-300">Product</label><p className="text-white font-medium">{selectedRFQ.productName}</p></div>
+                    <div><label className="text-sm font-semibold text-purple-300">Category</label><p className="text-white font-medium">{selectedRFQ.productCategory}</p></div>
+                    <div><label className="text-sm font-semibold text-purple-300">Quantity</label><p className="text-white font-medium">{selectedRFQ.quantity} {selectedRFQ.unit}</p></div>
+                    <div><label className="text-sm font-semibold text-purple-300">📍 Delivery Location</label><p className="text-white font-medium text-lg">{selectedRFQ.deliveryLocation || 'Not specified'}</p></div>
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold bg-gradient-to-r from-orange-400 to-purple-400 bg-clip-text text-transparent mb-3 border-b border-purple-500/30 pb-2">Status & Timeline</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div><label className="text-sm font-semibold text-purple-300">Status</label><Badge className={selectedRFQ.status === 'pending' ? 'bg-orange-500/20 text-orange-300 border-orange-500/30 mt-2' : 'bg-blue-500/20 text-blue-300 border-blue-500/30 mt-2'}>{selectedRFQ.status}</Badge></div>
+                    <div><label className="text-sm font-semibold text-purple-300">Submitted</label><p className="text-white font-medium">{new Date(selectedRFQ.createdAt).toLocaleDateString('en-US', {year: 'numeric', month: 'short', day: 'numeric'})}</p></div>
+                  </div>
+                </div>
+                <div className="flex gap-3 justify-end pt-4 border-t border-purple-500/30">
+                  <Button variant="outline" className="border-purple-400/50 text-purple-300 hover:bg-purple-500/20" onClick={() => setShowRFQDetails(false)}>Close</Button>
+                </div>
+              </div>
+            )}
           </DialogContent>
         </Dialog>
       </div>
