@@ -730,50 +730,52 @@ const AdminDashboard = () => {
         {/* Tab Switcher */}
         <div className="mb-8 sm:mb-10">
           <Card className="border border-purple-500/20 shadow-xl bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl">
-            <CardContent className="p-3 sm:p-4">
-              <div className="flex gap-3 sm:gap-4">
+            <CardContent className="p-2 sm:p-4">
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 lg:gap-4">
                 <Button
                   onClick={() => setActiveTab('suppliers')}
-                  className={`flex-1 h-11 sm:h-12 font-semibold transition-all duration-300 ${
+                  className={`flex-1 h-10 sm:h-11 lg:h-12 font-semibold text-xs sm:text-sm transition-all duration-300 ${
                     activeTab === 'suppliers'
                       ? 'bg-gradient-to-r from-purple-600 to-orange-600 text-white shadow-lg shadow-purple-500/50'
                       : 'bg-transparent text-purple-300 hover:bg-purple-500/20 border border-purple-500/30'
                   }`}
                 >
-                  <Users className="w-4 h-4 mr-2" />
-                  Suppliers
+                  <Users className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0" />
+                  <span className="hidden sm:inline">Suppliers</span>
+                  <span className="sm:hidden">Suppliers</span>
                   {statistics.pending > 0 && (
-                    <Badge className="ml-2 bg-orange-500 text-white">{statistics.pending}</Badge>
+                    <Badge className="ml-1 sm:ml-2 bg-orange-500 text-white text-xs py-0 px-1.5">{statistics.pending}</Badge>
                   )}
                 </Button>
                 <Button
                   onClick={() => setActiveTab('products')}
-                  className={`flex-1 h-11 sm:h-12 font-semibold transition-all duration-300 ${
+                  className={`flex-1 h-10 sm:h-11 lg:h-12 font-semibold text-xs sm:text-sm transition-all duration-300 ${
                     activeTab === 'products'
                       ? 'bg-gradient-to-r from-purple-600 to-orange-600 text-white shadow-lg shadow-purple-500/50'
                       : 'bg-transparent text-purple-300 hover:bg-purple-500/20 border border-purple-500/30'
                   }`}
                 >
-                  <Package className="w-4 h-4 mr-2" />
-                  Products
+                  <Package className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0" />
+                  <span className="hidden sm:inline">Products</span>
+                  <span className="sm:hidden">Products</span>
                   {products.filter(p => p.status === 'pending').length > 0 && (
-                    <Badge className="ml-2 bg-orange-500 text-white">
+                    <Badge className="ml-1 sm:ml-2 bg-orange-500 text-white text-xs py-0 px-1.5">
                       {products.filter(p => p.status === 'pending').length}
                     </Badge>
                   )}
                 </Button>
                 <Button
                   onClick={() => setActiveTab('rfq')}
-                  className={`flex-1 h-11 sm:h-12 font-semibold transition-all duration-300 ${
+                  className={`flex-1 h-10 sm:h-11 lg:h-12 font-semibold text-xs sm:text-sm transition-all duration-300 ${
                     activeTab === 'rfq'
                       ? 'bg-gradient-to-r from-purple-600 to-orange-600 text-white shadow-lg shadow-purple-500/50'
                       : 'bg-transparent text-purple-300 hover:bg-purple-500/20 border border-purple-500/30'
                   }`}
                 >
-                  <FileText className="w-4 h-4 mr-2" />
-                  RFQ
+                  <FileText className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0" />
+                  <span>RFQ</span>
                   {rfqs.filter(r => r.status === 'pending').length > 0 && (
-                    <Badge className="ml-2 bg-orange-500 text-white">
+                    <Badge className="ml-1 sm:ml-2 bg-orange-500 text-white text-xs py-0 px-1.5">
                       {rfqs.filter(r => r.status === 'pending').length}
                     </Badge>
                   )}
