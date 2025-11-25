@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   MessageSquare,
@@ -31,6 +31,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
+import { autoReplyService } from '@/lib/automationService';
 
 const AutoReplyManager = () => {
   const { toast } = useToast();
@@ -38,46 +39,89 @@ const AutoReplyManager = () => {
   const [showDialog, setShowDialog] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [replies, setReplies] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const token = localStorage.getItem('adminToken');
   const [formData, setFormData] = useState({
     name: '',
     trigger: 'general',
     message: '',
   });
 
-  const [replies, setReplies] = useState([
-    {
-      id: '1',
-      name: 'General Inquiry',
-      trigger: 'general',
-      message: 'Thank you for your inquiry. We have received your message and will respond within 24 hours.',
-      usage: 145,
-      status: 'active',
-    },
-    {
-      id: '2',
-      name: 'Pricing Question',
-      trigger: 'pricing',
-      message: 'Thank you for your interest. Our pricing is competitive and customizable based on quantity. Please contact our sales team for a detailed quote.',
-      usage: 89,
-      status: 'active',
-    },
-    {
-      id: '3',
-      name: 'MOQ Information',
-      trigger: 'moq',
-      message: 'Our Minimum Order Quantity (MOQ) is flexible and depends on the product. Please specify your product of interest for detailed MOQ information.',
-      usage: 156,
-      status: 'active',
-    },
-    {
-      id: '4',
-      name: 'Bulk Order',
-      trigger: 'bulk',
-      message: 'Thank you for your bulk order inquiry. Our team specializes in large-scale orders with special discounts. A dedicated account manager will contact you shortly.',
-      usage: 234,
-      status: 'active',
-    },
-  ]);
+  // Load auto-replies on component mount
+  useEffect(() => {
+    if (!token) {
+      navigate('/login');
+      return;
+    }
+    loadReplies();
+  }, [token, navigate]);
+
+  const loadReplies = async () => {
+    setLoading(true);
+    try {
+      const data = await autoReplyService.getAll(token!);
+      setReplies(data || []);
+    } catch (error: any) {
+      console.error('Failed to load auto-replies:', error);
+      
+      // Check if it's a 401 Unauthorized error
+      if (error?.message?.includes('401') || error?.message?.includes('Unauthorized')) {
+        console.warn('❌ 401 Unauthorized - Session expired');
+        localStorage.removeItem('adminToken');
+        localStorage.removeItem('adminUser');
+        toast({
+          title: 'Session Expired',
+          description: 'Your session has expired. Please login again.',
+          variant: 'destructive',
+        });
+        navigate('/login');
+        return;
+      }
+      
+      // Use demo data if API fails
+      setReplies([
+        {
+          id: '1',
+          name: 'General Inquiry',
+          trigger: 'general',
+          message: 'Thank you for your inquiry. We have received your message and will respond within 24 hours.',
+          usage: 145,
+          status: 'active',
+        },
+        {
+          id: '2',
+          name: 'Pricing Question',
+          trigger: 'pricing',
+          message: 'Thank you for your interest. Our pricing is competitive and customizable based on quantity. Please contact our sales team for a detailed quote.',
+          usage: 89,
+          status: 'active',
+        },
+        {
+          id: '3',
+          name: 'MOQ Information',
+          trigger: 'moq',
+          message: 'Our Minimum Order Quantity (MOQ) is flexible and depends on the product. Please specify your product of interest for detailed MOQ information.',
+          usage: 156,
+          status: 'active',
+        },
+        {
+          id: '4',
+          name: 'Bulk Order',
+          trigger: 'bulk',
+          message: 'Thank you for your bulk order inquiry. Our team specializes in large-scale orders with special discounts. A dedicated account manager will contact you shortly.',
+          usage: 234,
+          status: 'active',
+        },
+      ]);
+      toast({
+        title: 'Info',
+        description: 'Showing demo data. Backend not connected.',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const filteredReplies = replies.filter(
     (reply) =>
@@ -100,7 +144,7 @@ const AutoReplyManager = () => {
     setShowDialog(true);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!formData.name || !formData.message) {
       toast({
         title: 'Error',
@@ -110,60 +154,101 @@ const AutoReplyManager = () => {
       return;
     }
 
-    if (editingId) {
-      setReplies(
-        replies.map((r) =>
-          r.id === editingId
-            ? { ...r, ...formData }
-            : r
-        )
-      );
-      toast({
-        title: 'Success',
-        description: 'Auto-reply updated successfully',
-      });
-    } else {
-      setReplies([
-        ...replies,
-        {
-          id: Date.now().toString(),
+    try {
+      if (editingId) {
+        // Update existing reply
+        await autoReplyService.update(token!, editingId, formData);
+        setReplies(
+          replies.map((r) =>
+            r.id === editingId
+              ? { ...r, ...formData }
+              : r
+          )
+        );
+        toast({
+          title: 'Success',
+          description: 'Auto-reply updated successfully',
+        });
+      } else {
+        // Create new reply
+        const newReply = await autoReplyService.create(token!, {
           ...formData,
           usage: 0,
           status: 'active',
-        },
-      ]);
+        });
+        setReplies([...replies, newReply]);
+        toast({
+          title: 'Success',
+          description: 'Auto-reply created successfully',
+        });
+      }
+      setShowDialog(false);
+    } catch (error: any) {
+      console.error('Failed to save auto-reply:', error);
+      
+      // Check if it's a 401 Unauthorized error
+      if (error?.message?.includes('401') || error?.message?.includes('Unauthorized')) {
+        console.warn('❌ 401 Unauthorized - Session expired');
+        localStorage.removeItem('adminToken');
+        localStorage.removeItem('adminUser');
+        toast({
+          title: 'Session Expired',
+          description: 'Your session has expired. Please login again.',
+          variant: 'destructive',
+        });
+        navigate('/login');
+        return;
+      }
+      
       toast({
-        title: 'Success',
-        description: 'Auto-reply created successfully',
+        title: 'Error',
+        description: 'Failed to save auto-reply',
+        variant: 'destructive',
       });
     }
-    setShowDialog(false);
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this auto-reply?')) {
-      setReplies(replies.filter((r) => r.id !== id));
-      toast({
-        title: 'Deleted',
-        description: 'Auto-reply removed successfully',
-      });
+      try {
+        await autoReplyService.delete(token!, id);
+        setReplies(replies.filter((r) => r.id !== id));
+        toast({
+          title: 'Deleted',
+          description: 'Auto-reply removed successfully',
+        });
+      } catch (error) {
+        console.error('Failed to delete auto-reply:', error);
+        toast({
+          title: 'Error',
+          description: 'Failed to delete auto-reply',
+          variant: 'destructive',
+        });
+      }
     }
   };
 
-  const handleDuplicate = (reply: (typeof replies)[0]) => {
-    setReplies([
-      ...replies,
-      {
+  const handleDuplicate = async (reply: (typeof replies)[0]) => {
+    try {
+      const newReply = await autoReplyService.create(token!, {
         ...reply,
-        id: Date.now().toString(),
         name: `${reply.name} (Copy)`,
         usage: 0,
-      },
-    ]);
-    toast({
-      title: 'Duplicated',
-      description: 'Auto-reply duplicated successfully',
-    });
+        status: 'active',
+      });
+      setReplies([...replies, newReply]);
+      toast({
+        title: 'Duplicated',
+        description: 'Auto-reply duplicated successfully',
+      });
+    } catch (error) {
+      console.error('Failed to duplicate auto-reply:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to duplicate auto-reply',
+        variant: 'destructive',
+      });
+    }
   };
 
   return (

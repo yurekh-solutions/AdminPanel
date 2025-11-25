@@ -6,3 +6,5 @@ export { default as AutoReplyManager } from './AutoReplyManager';
 export { default as LeadScoringAdmin } from './LeadScoringAdmin';
 export { default as OrderAutomation } from './OrderAutomation';
 export { default as PerformanceAnalytics } from './PerformanceAnalytics';
+export { default as SmartInventory } from './SmartInventory';
+export { default as PriceOptimizer } from './PriceOptimizer';
