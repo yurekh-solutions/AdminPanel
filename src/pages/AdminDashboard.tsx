@@ -1289,13 +1289,19 @@ const AdminDashboard = () => {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-purple-500/10">
-                      {products.map((product) => (
+                      {products.map((product) => {
+                        // Fix localhost URLs to use production backend
+                        let productImageUrl = (product.images && product.images.length > 0) ? product.images[0] : '';
+                        if (productImageUrl.includes('localhost:5000')) {
+                          productImageUrl = productImageUrl.replace('http://localhost:5000', 'https://backendmatrix.onrender.com');
+                        }
+                        return (
                         <tr key={product._id} className="hover:bg-purple-500/5 transition-colors group">
                           <td className="px-3 sm:px-4 py-3">
                             <div className="flex items-center gap-3">
-                              {product.images && product.images.length > 0 ? (
+                              {productImageUrl ? (
                                 <img 
-                                  src={product.images[0]} 
+                                  src={productImageUrl} 
                                   alt={product.name}
                                   className="w-12 h-12 rounded-lg object-cover border-2 border-purple-500/30"
                                   onError={(e) => {
@@ -1412,7 +1418,8 @@ const AdminDashboard = () => {
                             </div>
                           </td>
                         </tr>
-                      ))}
+                        );
+                      })}
                     </tbody>
                   </table>
                 </div>
