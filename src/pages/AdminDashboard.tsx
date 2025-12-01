@@ -1292,11 +1292,16 @@ const AdminDashboard = () => {
                       {products.map((product) => {
                         // Fix image URLs to work in both dev and production
                         let productImageUrl = (product.images && product.images.length > 0) ? product.images[0] : '';
-                        if (productImageUrl.includes('localhost:5000')) {
+                        if (productImageUrl && (productImageUrl.includes('localhost:5000') || productImageUrl.startsWith('/uploads'))) {
                           const backendBaseUrl = import.meta.env.PROD 
                             ? 'https://backendmatrix.onrender.com'
                             : 'http://localhost:5000';
-                          productImageUrl = productImageUrl.replace('http://localhost:5000', backendBaseUrl);
+                          
+                          if (productImageUrl.startsWith('/uploads')) {
+                            productImageUrl = backendBaseUrl + productImageUrl;
+                          } else {
+                            productImageUrl = productImageUrl.replace('http://localhost:5000', backendBaseUrl);
+                          }
                         }
                         return (
                         <tr key={product._id} className="hover:bg-purple-500/5 transition-colors group">
