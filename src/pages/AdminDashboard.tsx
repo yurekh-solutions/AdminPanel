@@ -1292,16 +1292,30 @@ const AdminDashboard = () => {
                       {products.map((product) => {
                         // Fix image URLs to work in both dev and production
                         let productImageUrl = (product.images && product.images.length > 0) ? product.images[0] : '';
-                        if (productImageUrl && (productImageUrl.includes('localhost:5000') || productImageUrl.startsWith('/uploads'))) {
-                          const isProduction = window.location.hostname.includes('vercel.app');
-                          const backendBaseUrl = isProduction
-                            ? 'https://backendmatrix.onrender.com'
-                            : 'http://localhost:5000';
-                          
+                        
+                        // Determine if we're in production (Vercel deployment)
+                        const isProduction = window.location.hostname.includes('vercel.app') || 
+                                           window.location.hostname.includes('vercel.com');
+                        const backendBaseUrl = isProduction
+                          ? 'https://backendmatrix.onrender.com'
+                          : 'http://localhost:5000';
+                        
+                        // Fix all possible image URL formats
+                        if (productImageUrl) {
+                          // Case 1: Relative path starting with /uploads
                           if (productImageUrl.startsWith('/uploads')) {
                             productImageUrl = backendBaseUrl + productImageUrl;
-                          } else {
-                            productImageUrl = productImageUrl.replace('http://localhost:5000', backendBaseUrl);
+                          }
+                          // Case 2: Contains localhost in the URL
+                          else if (productImageUrl.includes('localhost')) {
+                            productImageUrl = productImageUrl.replace(/http:\/\/localhost:\d+/, backendBaseUrl);
+                          }
+                          // Case 3: Already has full URL but not HTTPS in production
+                          else if (isProduction && productImageUrl.startsWith('http://')) {
+                            // Ensure we're using the correct production backend
+                            if (!productImageUrl.includes('backendmatrix.onrender.com')) {
+                              productImageUrl = productImageUrl.replace(/https?:\/\/[^/]+/, backendBaseUrl);
+                            }
                           }
                         }
                         return (
