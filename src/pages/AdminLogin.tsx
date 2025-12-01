@@ -79,7 +79,7 @@ const AdminLogin = () => {
           <h1 className="text-3xl font-bold text-white mb-2">
             Admin Portal
           </h1>
-          <p className="text-slate-400">Sign in to access the dashboard</p>
+          <p className="text-slate-400">Admin Dashboard - Secure Access</p>
         </div>
 
         {/* Login Card */}
