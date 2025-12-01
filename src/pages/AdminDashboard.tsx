@@ -30,9 +30,24 @@ import { useToast } from '@/hooks/use-toast';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { Bar, BarChart, Line, LineChart, Pie, PieChart, Cell, XAxis, YAxis, CartesianGrid, Legend, ResponsiveContainer, Area, AreaChart } from 'recharts';
 import * as XLSX from 'xlsx';
+import { getFixedImageUrl, handleImageErrorWithFallback } from '@/lib/imageUtils';
 import './AdminDashboard.css';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+// Get API URL - use production URL if on Vercel, otherwise use env var or localhost
+const getApiUrl = () => {
+  // Check if running on Vercel production
+  if (typeof window !== 'undefined' && window.location.hostname.includes('vercel.app')) {
+    return 'https://backendmatrix.onrender.com/api';
+  }
+  // Check if env var is set (for local dev and preview)
+  if (import.meta.env.VITE_API_URL && !import.meta.env.VITE_API_URL.includes('localhost')) {
+    return import.meta.env.VITE_API_URL;
+  }
+  // Fallback to localhost for local development
+  return 'http://localhost:5000/api';
+};
+
+const API_URL = getApiUrl();
 
 interface Supplier {
   _id: string;
@@ -108,6 +123,7 @@ interface Product {
     currency: string;
     unit: string;
   };
+  image?: string; // Added single image field
   images: string[];
   stock: {
     available: boolean;
@@ -1290,34 +1306,9 @@ const AdminDashboard = () => {
                     </thead>
                     <tbody className="divide-y divide-purple-500/10">
                       {products.map((product) => {
-                        // Fix image URLs to work in both dev and production
-                        let productImageUrl = (product.images && product.images.length > 0) ? product.images[0] : '';
+                        // Fix image URLs using the utility function
+                        const productImageUrl = getFixedImageUrl((product.images && product.images.length > 0) ? product.images[0] : product.image);
                         
-                        // Determine if we're in production (Vercel deployment)
-                        const isProduction = window.location.hostname.includes('vercel.app') || 
-                                           window.location.hostname.includes('vercel.com');
-                        const backendBaseUrl = isProduction
-                          ? 'https://backendmatrix.onrender.com'
-                          : 'http://localhost:5000';
-                        
-                        // Fix all possible image URL formats
-                        if (productImageUrl) {
-                          // Case 1: Relative path starting with /uploads
-                          if (productImageUrl.startsWith('/uploads')) {
-                            productImageUrl = backendBaseUrl + productImageUrl;
-                          }
-                          // Case 2: Contains localhost in the URL
-                          else if (productImageUrl.includes('localhost')) {
-                            productImageUrl = productImageUrl.replace(/http:\/\/localhost:\d+/, backendBaseUrl);
-                          }
-                          // Case 3: Already has full URL but not HTTPS in production
-                          else if (isProduction && productImageUrl.startsWith('http://')) {
-                            // Ensure we're using the correct production backend
-                            if (!productImageUrl.includes('backendmatrix.onrender.com')) {
-                              productImageUrl = productImageUrl.replace(/https?:\/\/[^/]+/, backendBaseUrl);
-                            }
-                          }
-                        }
                         return (
                         <tr key={product._id} className="hover:bg-purple-500/5 transition-colors group">
                           <td className="px-3 sm:px-4 py-3">
@@ -1327,9 +1318,10 @@ const AdminDashboard = () => {
                                   src={productImageUrl} 
                                   alt={product.name}
                                   className="w-12 h-12 rounded-lg object-cover border-2 border-purple-500/30"
+                                  crossOrigin="anonymous"
                                   onError={(e) => {
-                                    e.currentTarget.src = '';
-                                    e.currentTarget.style.display = 'none';
+                                    console.error(`❌ Admin panel image failed: ${productImageUrl}`);
+                                    handleImageErrorWithFallback(e);
                                   }}
                                 />
                               ) : (
@@ -1946,14 +1938,22 @@ const AdminDashboard = () => {
                   <div>
                     <h3 className="text-lg font-bold bg-gradient-to-r from-orange-400 to-purple-400 bg-clip-text text-transparent mb-3 border-b border-purple-500/30 pb-2">Product Images</h3>
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                      {selectedProduct.images.map((image, index) => (
-                        <img 
-                          key={index}
-                          src={image} 
-                          alt={`${selectedProduct.name} - ${index + 1}`}
-                          className="w-full h-48 object-cover rounded-lg border-2 border-purple-500/30"
-                        />
-                      ))}
+                      {selectedProduct.images.map((image, index) => {
+                        const fixedImageUrl = getFixedImageUrl(image);
+                        return (
+                          <img 
+                            key={index}
+                            src={fixedImageUrl} 
+                            alt={`${selectedProduct.name} - ${index + 1}`}
+                            className="w-full h-48 object-cover rounded-lg border-2 border-purple-500/30"
+                            crossOrigin="anonymous"
+                            onError={(e) => {
+                              console.error(`❌ Admin image failed to load: ${fixedImageUrl}`);
+                              handleImageErrorWithFallback(e);
+                            }}
+                          />
+                        );
+                      })}
                     </div>
                   </div>
                 )}

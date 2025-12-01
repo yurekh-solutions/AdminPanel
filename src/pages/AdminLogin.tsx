@@ -7,7 +7,21 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+// Get API URL - use production URL if on Vercel, otherwise use env var or localhost
+const getApiUrl = () => {
+  // Check if running on Vercel production
+  if (window.location.hostname.includes('vercel.app')) {
+    return 'https://backendmatrix.onrender.com/api';
+  }
+  // Check if env var is set (for local dev and preview)
+  if (import.meta.env.VITE_API_URL && !import.meta.env.VITE_API_URL.includes('localhost')) {
+    return import.meta.env.VITE_API_URL;
+  }
+  // Fallback to localhost for local development
+  return 'http://localhost:5000/api';
+};
+
+const API_URL = getApiUrl();
 
 const AdminLogin = () => {
   const navigate = useNavigate();
@@ -21,6 +35,7 @@ const AdminLogin = () => {
 
     try {
       // Use backend API for authentication
+      console.log('🔐 Admin Login - Using API URL:', API_URL);
       const response = await fetch(`${API_URL}/auth/admin/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
