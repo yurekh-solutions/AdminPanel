@@ -1293,7 +1293,8 @@ const AdminDashboard = () => {
                         // Fix image URLs to work in both dev and production
                         let productImageUrl = (product.images && product.images.length > 0) ? product.images[0] : '';
                         if (productImageUrl && (productImageUrl.includes('localhost:5000') || productImageUrl.startsWith('/uploads'))) {
-                          const backendBaseUrl = import.meta.env.PROD 
+                          const isProduction = window.location.hostname.includes('vercel.app');
+                          const backendBaseUrl = isProduction
                             ? 'https://backendmatrix.onrender.com'
                             : 'http://localhost:5000';
                           
