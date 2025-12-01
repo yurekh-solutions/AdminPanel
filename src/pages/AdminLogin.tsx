@@ -35,7 +35,7 @@ const AdminLogin = () => {
 
     try {
       // Use backend API for authentication
-      console.log('🔐 Admin Login - Using API URL:', API_URL);
+      console.log('🔐 Admin Login - Connecting to backend with API URL:', API_URL);
       const response = await fetch(`${API_URL}/auth/admin/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
