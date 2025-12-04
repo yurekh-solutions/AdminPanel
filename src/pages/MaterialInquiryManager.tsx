@@ -315,89 +315,38 @@ const MaterialInquiryManager: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#1a1625] via-[#2d1b3d] to-[#1a1625] p-6">
+    <div className="min-h-screen bg-gradient-to-br from-[#1a1625] via-[#2d1b3d] to-[#1a1625] p-3 sm:p-4 md:p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2 flex items-center gap-3">
-            <Boxes className="w-10 h-10 text-purple-400" />
+        <div className="mb-4 sm:mb-6 md:mb-8">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2 flex items-center gap-2 sm:gap-3">
+            <Boxes className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 text-purple-400" />
             Material Inquiry Manager
           </h1>
-          <p className="text-gray-400">Manage bulk material orders and inquiries</p>
-        </div>
-
-        {/* Statistics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          <Card className="bg-white/5 backdrop-blur-xl border-white/10">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-gray-400 text-sm">Total Inquiries</p>
-                  <p className="text-3xl font-bold text-white mt-1">{statistics.total}</p>
-                </div>
-                <FileText className="w-10 h-10 text-purple-400" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-white/5 backdrop-blur-xl border-white/10">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-gray-400 text-sm">New Inquiries</p>
-                  <p className="text-3xl font-bold text-blue-400 mt-1">{statistics.new}</p>
-                </div>
-                <AlertCircle className="w-10 h-10 text-blue-400" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-white/5 backdrop-blur-xl border-white/10">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-gray-400 text-sm">Urgent Priority</p>
-                  <p className="text-3xl font-bold text-red-400 mt-1">{statistics.urgent}</p>
-                </div>
-                <TrendingUp className="w-10 h-10 text-red-400" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-white/5 backdrop-blur-xl border-white/10">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-gray-400 text-sm">Completed</p>
-                  <p className="text-3xl font-bold text-green-400 mt-1">{statistics.completed}</p>
-                </div>
-                <CheckCircle className="w-10 h-10 text-green-400" />
-              </div>
-            </CardContent>
-          </Card>
+          <p className="text-sm sm:text-base text-gray-400">Manage bulk material orders and inquiries</p>
         </div>
 
         {/* Filters */}
-        <Card className="bg-white/5 backdrop-blur-xl border-white/10 mb-6">
-          <CardContent className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card className="bg-white/5 backdrop-blur-xl border-white/10 mb-4 sm:mb-6">
+          <CardContent className="p-3 sm:p-4 md:p-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
               <div>
-                <Label className="text-gray-300 mb-2 block">Search</Label>
+                <Label className="text-gray-300 mb-2 block text-sm">Search</Label>
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
                   <Input
                     placeholder="Search by inquiry #, name, email, phone..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-gray-500"
+                    className="pl-9 sm:pl-10 bg-white/5 border-white/10 text-white placeholder:text-gray-500 text-sm"
                   />
                 </div>
               </div>
 
               <div>
-                <Label className="text-gray-300 mb-2 block">Status Filter</Label>
+                <Label className="text-gray-300 mb-2 block text-sm">Status Filter</Label>
                 <Select value={statusFilter} onValueChange={setStatusFilter}>
-                  <SelectTrigger className="bg-white/5 border-white/10 text-white">
+                  <SelectTrigger className="bg-white/5 border-white/10 text-white text-sm">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="bg-[#2d1b3d] border-white/10">
@@ -414,9 +363,9 @@ const MaterialInquiryManager: React.FC = () => {
               </div>
 
               <div>
-                <Label className="text-gray-300 mb-2 block">Priority Filter</Label>
+                <Label className="text-gray-300 mb-2 block text-sm">Priority Filter</Label>
                 <Select value={priorityFilter} onValueChange={setPriorityFilter}>
-                  <SelectTrigger className="bg-white/5 border-white/10 text-white">
+                  <SelectTrigger className="bg-white/5 border-white/10 text-white text-sm">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="bg-[#2d1b3d] border-white/10">
@@ -434,29 +383,29 @@ const MaterialInquiryManager: React.FC = () => {
 
         {/* Inquiries Grid - Card Layout */}
         <Card className="bg-white/5 backdrop-blur-xl border-white/10">
-          <CardHeader>
-            <CardTitle className="text-white flex items-center justify-between flex-wrap gap-4">
-              <span>Material Inquiries ({filteredInquiries.length})</span>
-              <Button onClick={fetchInquiries} className="bg-purple-600 hover:bg-purple-700">
+          <CardHeader className="p-3 sm:p-4 md:p-6">
+            <CardTitle className="text-white flex items-center justify-between flex-wrap gap-3 sm:gap-4 text-base sm:text-lg md:text-xl">
+              <span className="text-sm sm:text-base md:text-lg">Material Inquiries ({filteredInquiries.length})</span>
+              <Button onClick={fetchInquiries} className="bg-purple-600 hover:bg-purple-700 text-xs sm:text-sm">
                 Refresh
               </Button>
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-3 sm:p-4 md:p-6">
             {loading ? (
-              <div className="text-center text-gray-400 py-12">Loading inquiries...</div>
+              <div className="text-center text-gray-400 py-8 sm:py-12 text-sm sm:text-base">Loading inquiries...</div>
             ) : filteredInquiries.length === 0 ? (
-              <div className="text-center text-gray-400 py-12">No inquiries found</div>
+              <div className="text-center text-gray-400 py-8 sm:py-12 text-sm sm:text-base">No inquiries found</div>
             ) : (
-              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
                 {filteredInquiries.map((inquiry) => (
                   <Card key={inquiry._id} className="bg-gradient-to-br from-white/10 to-white/5 border-white/20 hover:border-purple-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20">
-                    <CardContent className="p-6 space-y-4">
+                    <CardContent className="p-4 sm:p-5 md:p-6 space-y-3 sm:space-y-4">
                       {/* Header with Inquiry Number */}
                       <div className="flex items-start justify-between">
                         <div>
-                          <p className="text-purple-400 font-mono text-sm mb-1">Inquiry #</p>
-                          <p className="text-white font-bold text-lg">{inquiry.inquiryNumber}</p>
+                          <p className="text-purple-400 font-mono text-xs mb-1">Inquiry #</p>
+                          <p className="text-white font-bold text-base sm:text-lg">{inquiry.inquiryNumber}</p>
                         </div>
                         <div className="flex gap-2">
                           {getStatusBadge(inquiry.status)}
@@ -464,39 +413,39 @@ const MaterialInquiryManager: React.FC = () => {
                       </div>
 
                       {/* Customer Info */}
-                      <div className="space-y-2 border-t border-white/10 pt-4">
+                      <div className="space-y-2 border-t border-white/10 pt-3 sm:pt-4">
                         <div className="flex items-center gap-2">
-                          <Users className="w-4 h-4 text-purple-400" />
-                          <div className="flex-1">
-                            <p className="text-white font-medium text-sm">{inquiry.customerName}</p>
+                          <Users className="w-4 h-4 text-purple-400 flex-shrink-0" />
+                          <div className="flex-1 min-w-0">
+                            <p className="text-white font-medium text-xs sm:text-sm truncate">{inquiry.customerName}</p>
                             {inquiry.companyName && (
-                              <p className="text-gray-400 text-xs">{inquiry.companyName}</p>
+                              <p className="text-gray-400 text-xs truncate">{inquiry.companyName}</p>
                             )}
                           </div>
                         </div>
                         
                         <div className="flex items-center gap-2">
-                          <Mail className="w-4 h-4 text-purple-400" />
-                          <p className="text-gray-300 text-xs truncate">{inquiry.email}</p>
+                          <Mail className="w-4 h-4 text-purple-400 flex-shrink-0" />
+                          <p className="text-gray-300 text-xs truncate flex-1 min-w-0">{inquiry.email}</p>
                         </div>
                         
                         <div className="flex items-center gap-2">
-                          <Phone className="w-4 h-4 text-purple-400" />
+                          <Phone className="w-4 h-4 text-purple-400 flex-shrink-0" />
                           <p className="text-gray-300 text-xs">{inquiry.phone}</p>
                         </div>
                       </div>
 
                       {/* Materials & Value */}
-                      <div className="grid grid-cols-2 gap-3 border-t border-white/10 pt-4">
+                      <div className="grid grid-cols-2 gap-2 sm:gap-3 border-t border-white/10 pt-3 sm:pt-4">
                         <div>
                           <p className="text-gray-400 text-xs mb-1">Materials</p>
-                          <Badge className="bg-blue-500/20 text-blue-400 border-0">
+                          <Badge className="bg-blue-500/20 text-blue-400 border-0 text-xs">
                             {inquiry.materials.length} items
                           </Badge>
                         </div>
                         <div>
                           <p className="text-gray-400 text-xs mb-1">Est. Value</p>
-                          <p className="text-green-400 font-semibold text-sm">
+                          <p className="text-green-400 font-semibold text-xs sm:text-sm">
                             {inquiry.totalEstimatedValue
                               ? `₹${inquiry.totalEstimatedValue.toLocaleString()}`
                               : 'N/A'}
@@ -505,7 +454,7 @@ const MaterialInquiryManager: React.FC = () => {
                       </div>
 
                       {/* Priority & Date */}
-                      <div className="grid grid-cols-2 gap-3 border-t border-white/10 pt-4">
+                      <div className="grid grid-cols-2 gap-2 sm:gap-3 border-t border-white/10 pt-3 sm:pt-4">
                         <div>
                           <p className="text-gray-400 text-xs mb-1">Priority</p>
                           {getPriorityBadge(inquiry.priority)}
@@ -519,24 +468,25 @@ const MaterialInquiryManager: React.FC = () => {
                       </div>
 
                       {/* Actions */}
-                      <div className="flex gap-2 border-t border-white/10 pt-4">
+                      <div className="flex gap-2 border-t border-white/10 pt-3 sm:pt-4">
                         <Button
                           size="sm"
                           onClick={() => {
                             setSelectedInquiry(inquiry);
                             setShowDetailModal(true);
                           }}
-                          className="flex-1 bg-purple-600 hover:bg-purple-700"
+                          className="flex-1 bg-purple-600 hover:bg-purple-700 text-xs sm:text-sm"
                         >
-                          <Eye className="w-4 h-4 mr-2" />
-                          View Details
+                          <Eye className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                          <span className="hidden sm:inline">View Details</span>
+                          <span className="sm:hidden">View</span>
                         </Button>
                         <Button
                           size="sm"
                           onClick={() => deleteInquiry(inquiry._id)}
-                          className="bg-red-600 hover:bg-red-700"
+                          className="bg-red-600 hover:bg-red-700 px-2 sm:px-3"
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
                         </Button>
                       </div>
                     </CardContent>
@@ -550,70 +500,70 @@ const MaterialInquiryManager: React.FC = () => {
 
       {/* Detail Modal */}
       <Dialog open={showDetailModal} onOpenChange={setShowDetailModal}>
-        <DialogContent className="bg-[#2d1b3d] border-white/10 text-white max-w-4xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="bg-[#2d1b3d] border-white/10 text-white max-w-[95vw] sm:max-w-4xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="text-2xl flex items-center gap-2">
-              <FileText className="w-6 h-6 text-purple-400" />
-              Inquiry Details - {selectedInquiry?.inquiryNumber}
+            <DialogTitle className="text-lg sm:text-xl md:text-2xl flex items-center gap-2">
+              <FileText className="w-5 h-5 sm:w-6 sm:h-6 text-purple-400" />
+              <span className="truncate">Inquiry Details - {selectedInquiry?.inquiryNumber}</span>
             </DialogTitle>
           </DialogHeader>
 
           {selectedInquiry && (
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               {/* Customer Info */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div>
-                  <Label className="text-gray-400 flex items-center gap-2">
-                    <Users className="w-4 h-4" /> Customer Name
+                  <Label className="text-gray-400 flex items-center gap-2 text-xs sm:text-sm">
+                    <Users className="w-3 h-3 sm:w-4 sm:h-4" /> Customer Name
                   </Label>
-                  <p className="text-white font-medium">{selectedInquiry.customerName}</p>
+                  <p className="text-white font-medium text-sm sm:text-base">{selectedInquiry.customerName}</p>
                 </div>
                 <div>
-                  <Label className="text-gray-400 flex items-center gap-2">
-                    <Building className="w-4 h-4" /> Company
+                  <Label className="text-gray-400 flex items-center gap-2 text-xs sm:text-sm">
+                    <Building className="w-3 h-3 sm:w-4 sm:h-4" /> Company
                   </Label>
-                  <p className="text-white">{selectedInquiry.companyName || 'N/A'}</p>
+                  <p className="text-white text-sm sm:text-base">{selectedInquiry.companyName || 'N/A'}</p>
                 </div>
                 <div>
-                  <Label className="text-gray-400 flex items-center gap-2">
-                    <Mail className="w-4 h-4" /> Email
+                  <Label className="text-gray-400 flex items-center gap-2 text-xs sm:text-sm">
+                    <Mail className="w-3 h-3 sm:w-4 sm:h-4" /> Email
                   </Label>
-                  <p className="text-white">{selectedInquiry.email}</p>
+                  <p className="text-white text-sm sm:text-base truncate">{selectedInquiry.email}</p>
                 </div>
                 <div>
-                  <Label className="text-gray-400 flex items-center gap-2">
-                    <Phone className="w-4 h-4" /> Phone
+                  <Label className="text-gray-400 flex items-center gap-2 text-xs sm:text-sm">
+                    <Phone className="w-3 h-3 sm:w-4 sm:h-4" /> Phone
                   </Label>
-                  <p className="text-white">{selectedInquiry.phone}</p>
+                  <p className="text-white text-sm sm:text-base">{selectedInquiry.phone}</p>
                 </div>
               </div>
 
               {/* Materials */}
               <div>
-                <Label className="text-gray-400 mb-2 block">Materials Requested</Label>
+                <Label className="text-gray-400 mb-2 block text-xs sm:text-sm">Materials Requested</Label>
                 <div className="space-y-2">
                   {selectedInquiry.materials.map((material, index) => (
                     <Card key={index} className="bg-white/5 border-white/10">
-                      <CardContent className="p-4">
-                        <div className="grid grid-cols-2 gap-2">
+                      <CardContent className="p-3 sm:p-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                           <div>
-                            <p className="text-gray-400 text-sm">Material</p>
-                            <p className="text-white font-medium">{material.materialName}</p>
+                            <p className="text-gray-400 text-xs">Material</p>
+                            <p className="text-white font-medium text-sm">{material.materialName}</p>
                           </div>
                           <div>
-                            <p className="text-gray-400 text-sm">Category</p>
-                            <p className="text-white">{material.category}</p>
+                            <p className="text-gray-400 text-xs">Category</p>
+                            <p className="text-white text-sm">{material.category}</p>
                           </div>
                           <div>
-                            <p className="text-gray-400 text-sm">Quantity</p>
-                            <p className="text-white">
+                            <p className="text-gray-400 text-xs">Quantity</p>
+                            <p className="text-white text-sm">
                               {material.quantity} {material.unit}
                             </p>
                           </div>
                           {material.targetPrice && (
                             <div>
-                              <p className="text-gray-400 text-sm">Target Price</p>
-                              <p className="text-green-400">₹{material.targetPrice.toLocaleString()}</p>
+                              <p className="text-gray-400 text-xs">Target Price</p>
+                              <p className="text-green-400 text-sm">₹{material.targetPrice.toLocaleString()}</p>
                             </div>
                           )}
                         </div>
@@ -624,16 +574,16 @@ const MaterialInquiryManager: React.FC = () => {
               </div>
 
               {/* Delivery Info */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div>
-                  <Label className="text-gray-400 flex items-center gap-2">
-                    <MapPin className="w-4 h-4" /> Delivery Location
+                  <Label className="text-gray-400 flex items-center gap-2 text-xs sm:text-sm">
+                    <MapPin className="w-3 h-3 sm:w-4 sm:h-4" /> Delivery Location
                   </Label>
-                  <p className="text-white">{selectedInquiry.deliveryLocation}</p>
+                  <p className="text-white text-sm sm:text-base">{selectedInquiry.deliveryLocation}</p>
                 </div>
                 <div>
-                  <Label className="text-gray-400">Est. Value</Label>
-                  <p className="text-green-400 font-semibold text-xl">
+                  <Label className="text-gray-400 text-xs sm:text-sm">Est. Value</Label>
+                  <p className="text-green-400 font-semibold text-lg sm:text-xl">
                     ₹{selectedInquiry.totalEstimatedValue?.toLocaleString() || 'N/A'}
                   </p>
                 </div>
@@ -641,12 +591,12 @@ const MaterialInquiryManager: React.FC = () => {
 
               {/* Status Update */}
               <div>
-                <Label className="text-gray-400 mb-2 block">Update Status</Label>
+                <Label className="text-gray-400 mb-2 block text-xs sm:text-sm">Update Status</Label>
                 <Select
                   value={selectedInquiry.status}
                   onValueChange={(value) => updateStatus(selectedInquiry._id, value)}
                 >
-                  <SelectTrigger className="bg-white/5 border-white/10 text-white">
+                  <SelectTrigger className="bg-white/5 border-white/10 text-white text-sm">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="bg-[#2d1b3d] border-white/10">
@@ -665,9 +615,9 @@ const MaterialInquiryManager: React.FC = () => {
               {/* Add Quote Button */}
               <Button
                 onClick={() => setShowQuoteModal(true)}
-                className="w-full bg-gradient-to-r from-purple-600 to-orange-500 hover:opacity-90"
+                className="w-full bg-gradient-to-r from-purple-600 to-orange-500 hover:opacity-90 text-sm sm:text-base"
               >
-                <Plus className="w-4 h-4 mr-2" />
+                <Plus className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
                 Add Supplier Quote
               </Button>
             </div>
@@ -677,54 +627,61 @@ const MaterialInquiryManager: React.FC = () => {
 
       {/* Add Quote Modal */}
       <Dialog open={showQuoteModal} onOpenChange={setShowQuoteModal}>
-        <DialogContent className="bg-[#2d1b3d] border-white/10 text-white">
+        <DialogContent className="bg-[#2d1b3d] border-white/10 text-white max-w-[95vw] sm:max-w-lg">
           <DialogHeader>
-            <DialogTitle>Add Supplier Quote</DialogTitle>
+            <DialogTitle className="text-lg sm:text-xl">Add Supplier Quote</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             <div>
-              <Label className="text-gray-300">Supplier Name *</Label>
+              <Label className="text-gray-300 text-xs sm:text-sm">Supplier Name *</Label>
               <Input
                 value={quoteData.supplierName}
                 onChange={(e) => setQuoteData({ ...quoteData, supplierName: e.target.value })}
-                className="bg-white/5 border-white/10 text-white"
+                className="bg-white/5 border-white/10 text-white text-sm"
                 placeholder="Enter supplier name"
               />
             </div>
             <div>
-              <Label className="text-gray-300">Quoted Price (₹) *</Label>
+              <Label className="text-gray-300 text-xs sm:text-sm">Quoted Price (₹) *</Label>
               <Input
                 type="number"
                 value={quoteData.quotedPrice}
                 onChange={(e) => setQuoteData({ ...quoteData, quotedPrice: e.target.value })}
-                className="bg-white/5 border-white/10 text-white"
+                className="bg-white/5 border-white/10 text-white text-sm"
                 placeholder="Enter price"
               />
             </div>
             <div>
-              <Label className="text-gray-300">Valid Until</Label>
+              <Label className="text-gray-300 text-xs sm:text-sm">Valid Until</Label>
               <Input
                 type="date"
                 value={quoteData.validUntil}
                 onChange={(e) => setQuoteData({ ...quoteData, validUntil: e.target.value })}
-                className="bg-white/5 border-white/10 text-white"
+                className="bg-white/5 border-white/10 text-white text-sm"
               />
             </div>
             <div>
-              <Label className="text-gray-300">Notes</Label>
+              <Label className="text-gray-300 text-xs sm:text-sm">Notes</Label>
               <Textarea
                 value={quoteData.notes}
                 onChange={(e) => setQuoteData({ ...quoteData, notes: e.target.value })}
-                className="bg-white/5 border-white/10 text-white"
+                className="bg-white/5 border-white/10 text-white text-sm"
                 placeholder="Additional notes..."
               />
             </div>
           </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowQuoteModal(false)} className="border-white/10">
+          <DialogFooter className="flex-col sm:flex-row gap-2">
+            <Button 
+              variant="outline" 
+              onClick={() => setShowQuoteModal(false)} 
+              className="border-white/10 w-full sm:w-auto text-sm"
+            >
               Cancel
             </Button>
-            <Button onClick={handleAddQuote} className="bg-purple-600 hover:bg-purple-700">
+            <Button 
+              onClick={handleAddQuote} 
+              className="bg-purple-600 hover:bg-purple-700 w-full sm:w-auto text-sm"
+            >
               Add Quote
             </Button>
           </DialogFooter>
