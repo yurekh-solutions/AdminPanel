@@ -448,9 +448,9 @@ const MaterialInquiryManager: React.FC = () => {
             ) : filteredInquiries.length === 0 ? (
               <div className="text-center text-gray-400 py-12">No inquiries found</div>
             ) : (
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto overflow-y-auto max-h-[500px] scrollbar-thin scrollbar-thumb-purple-500/50 scrollbar-track-purple-900/20 hover:scrollbar-thumb-purple-500/70">
                 <table className="w-full">
-                  <thead>
+                  <thead className="sticky top-0 bg-[#2d1b3d] z-10">
                     <tr className="border-b border-white/10">
                       <th className="text-left text-gray-300 py-3 px-4">Inquiry #</th>
                       <th className="text-left text-gray-300 py-3 px-4">Customer</th>
