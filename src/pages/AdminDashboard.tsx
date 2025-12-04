@@ -1208,7 +1208,7 @@ const AdminDashboard = () => {
               ) : filteredSuppliers.length === 0 ? (
                 <p className="text-center py-8 text-purple-400/70 text-sm sm:text-base">No suppliers found</p>
               ) : (
-                <div className="overflow-x-auto scrollbar-hide">
+                <div className="overflow-x-auto overflow-y-auto max-h-[600px] scrollbar-thin scrollbar-thumb-purple-500/50 scrollbar-track-purple-900/20 hover:scrollbar-thumb-purple-500/70">
                   <table className="w-full min-w-[800px]">
                     <thead className="bg-gradient-to-r from-purple-500/20 to-orange-500/20">
                       <tr>
@@ -1320,7 +1320,7 @@ const AdminDashboard = () => {
                   <p className="text-purple-400/50 text-xs sm:text-sm mt-2">Products will appear here once suppliers add them</p>
                 </div>
               ) : (
-                <div className="overflow-x-auto scrollbar-hide">
+                <div className="overflow-x-auto overflow-y-auto max-h-[600px] scrollbar-thin scrollbar-thumb-purple-500/50 scrollbar-track-purple-900/20 hover:scrollbar-thumb-purple-500/70">
                   <table className="w-full min-w-[900px]">
                     <thead className="bg-gradient-to-r from-purple-500/20 to-orange-500/20">
                       <tr>
@@ -1487,7 +1487,7 @@ const AdminDashboard = () => {
                   <p className="text-purple-400/70 text-xs sm:text-base">No RFQs found</p>
                 </div>
               ) : (
-                <div className="w-full overflow-x-auto scrollbar-hide -mx-2 sm:-mx-3 md:-mx-4">
+                <div className="w-full overflow-x-auto overflow-y-auto max-h-[600px] scrollbar-thin scrollbar-thumb-purple-500/50 scrollbar-track-purple-900/20 hover:scrollbar-thumb-purple-500/70 -mx-2 sm:-mx-3 md:-mx-4">
                   <table className="w-full text-[11px] sm:text-xs md:text-sm">
                     <thead className="bg-gradient-to-r from-purple-500/20 to-orange-500/20 sticky top-0">
                       <tr>
