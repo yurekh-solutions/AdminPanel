@@ -1529,7 +1529,7 @@ const AdminDashboard = () => {
 
         {/* Material Inquiry Section */}
         {activeTab === 'material-inquiry' && (
-          <div className="h-screen overflow-hidden">
+          <div className="overflow-visible">
             <MaterialInquiryManager />
           </div>
         )}
