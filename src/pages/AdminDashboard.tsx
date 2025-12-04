@@ -686,79 +686,275 @@ const AdminDashboard = () => {
           </Card>
         </div>
 
-        {/* Statistics Cards */}
+        {/* Statistics Cards - Dynamic based on active tab */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6 mb-6 sm:mb-8 lg:mb-10">
-          <Card className="border border-purple-500/20 shadow-xl hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl">
-            <CardHeader className="pb-2 sm:pb-3">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-[10px] sm:text-xs lg:text-sm font-medium text-purple-300">Total</CardTitle>
-                <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/30">
-                  <Users className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" />
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="pt-1 sm:pt-2">
-              <p className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-white">{statistics.total}</p>
-              <p className="text-[9px] sm:text-[10px] lg:text-xs text-purple-400/70 mt-0.5 sm:mt-1">All submissions</p>
-              <div className="mt-1 sm:mt-2 flex items-center gap-1">
-                <TrendingUp className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-blue-400" />
-                <span className="text-[8px] sm:text-[9px] lg:text-[10px] text-blue-400 font-medium">+12% month</span>
-              </div>
-            </CardContent>
-          </Card>
+          {activeTab === 'suppliers' && (
+            <>
+              <Card className="border border-purple-500/20 shadow-xl hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl">
+                <CardHeader className="pb-2 sm:pb-3">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-[10px] sm:text-xs lg:text-sm font-medium text-purple-300">Total</CardTitle>
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/30">
+                      <Users className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" />
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-1 sm:pt-2">
+                  <p className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-white">{statistics.total}</p>
+                  <p className="text-[9px] sm:text-[10px] lg:text-xs text-purple-400/70 mt-0.5 sm:mt-1">All submissions</p>
+                  <div className="mt-1 sm:mt-2 flex items-center gap-1">
+                    <TrendingUp className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-blue-400" />
+                    <span className="text-[8px] sm:text-[9px] lg:text-[10px] text-blue-400 font-medium">+12% month</span>
+                  </div>
+                </CardContent>
+              </Card>
 
-          <Card className="border border-purple-500/20 shadow-xl hover:shadow-2xl hover:shadow-orange-500/20 transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl">
-            <CardHeader className="pb-2 sm:pb-3">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-[10px] sm:text-xs lg:text-sm font-medium text-purple-300">Pending</CardTitle>
-                <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-lg shadow-orange-500/30">
-                  <Clock className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" />
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="pt-1 sm:pt-2">
-              <p className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-orange-400">{statistics.pending}</p>
-              <p className="text-[9px] sm:text-[10px] lg:text-xs text-orange-400/70 mt-0.5 sm:mt-1 font-medium">Need action</p>
-              <div className="mt-1 sm:mt-2 flex items-center gap-1">
-                <AlertCircle className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-orange-400" />
-                <span className="text-[8px] sm:text-[9px] lg:text-[10px] text-orange-400 font-medium">Review</span>
-              </div>
-            </CardContent>
-          </Card>
+              <Card className="border border-purple-500/20 shadow-xl hover:shadow-2xl hover:shadow-orange-500/20 transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl">
+                <CardHeader className="pb-2 sm:pb-3">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-[10px] sm:text-xs lg:text-sm font-medium text-purple-300">Pending</CardTitle>
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-lg shadow-orange-500/30">
+                      <Clock className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" />
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-1 sm:pt-2">
+                  <p className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-orange-400">{statistics.pending}</p>
+                  <p className="text-[9px] sm:text-[10px] lg:text-xs text-orange-400/70 mt-0.5 sm:mt-1 font-medium">Need action</p>
+                  <div className="mt-1 sm:mt-2 flex items-center gap-1">
+                    <AlertCircle className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-orange-400" />
+                    <span className="text-[8px] sm:text-[9px] lg:text-[10px] text-orange-400 font-medium">Review</span>
+                  </div>
+                </CardContent>
+              </Card>
 
-          <Card className="border border-purple-500/20 shadow-xl hover:shadow-2xl hover:shadow-purple-500/20 transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl">
-            <CardHeader className="pb-2 sm:pb-3">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-[10px] sm:text-xs lg:text-sm font-medium text-purple-300">Approved</CardTitle>
-                <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-lg bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/30">
-                  <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" />
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="pt-1 sm:pt-2">
-              <p className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-purple-400">{statistics.approved}</p>
-              <p className="text-[9px] sm:text-[10px] lg:text-xs text-purple-400/70 mt-0.5 sm:mt-1 font-medium">Active</p>
-              <div className="mt-1 sm:mt-2 flex items-center gap-1">
-                <Award className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-purple-400" />
-                <span className="text-[8px] sm:text-[9px] lg:text-[10px] text-purple-400 font-medium">Verified</span>
-              </div>
-            </CardContent>
-          </Card>
+              <Card className="border border-purple-500/20 shadow-xl hover:shadow-2xl hover:shadow-purple-500/20 transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl">
+                <CardHeader className="pb-2 sm:pb-3">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-[10px] sm:text-xs lg:text-sm font-medium text-purple-300">Approved</CardTitle>
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-lg bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/30">
+                      <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" />
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-1 sm:pt-2">
+                  <p className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-purple-400">{statistics.approved}</p>
+                  <p className="text-[9px] sm:text-[10px] lg:text-xs text-purple-400/70 mt-0.5 sm:mt-1 font-medium">Active</p>
+                  <div className="mt-1 sm:mt-2 flex items-center gap-1">
+                    <Award className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-purple-400" />
+                    <span className="text-[8px] sm:text-[9px] lg:text-[10px] text-purple-400 font-medium">Verified</span>
+                  </div>
+                </CardContent>
+              </Card>
 
-          <Card className="border border-purple-500/20 shadow-xl hover:shadow-2xl hover:shadow-pink-500/20 transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl">
-            <CardHeader className="pb-2 sm:pb-3">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-[10px] sm:text-xs lg:text-sm font-medium text-purple-300">Rejected</CardTitle>
-                <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-lg bg-gradient-to-br from-pink-500 to-pink-600 flex items-center justify-center shadow-lg shadow-pink-500/30">
-                  <XCircle className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" />
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="pt-1 sm:pt-2">
-              <p className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-pink-400">{statistics.rejected}</p>
-              <p className="text-[9px] sm:text-[10px] lg:text-xs text-purple-400/70 mt-0.5 sm:mt-1">Declined</p>
-            </CardContent>
-          </Card>
+              <Card className="border border-purple-500/20 shadow-xl hover:shadow-2xl hover:shadow-pink-500/20 transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl">
+                <CardHeader className="pb-2 sm:pb-3">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-[10px] sm:text-xs lg:text-sm font-medium text-purple-300">Rejected</CardTitle>
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-lg bg-gradient-to-br from-pink-500 to-pink-600 flex items-center justify-center shadow-lg shadow-pink-500/30">
+                      <XCircle className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" />
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-1 sm:pt-2">
+                  <p className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-pink-400">{statistics.rejected}</p>
+                  <p className="text-[9px] sm:text-[10px] lg:text-xs text-purple-400/70 mt-0.5 sm:mt-1">Declined</p>
+                </CardContent>
+              </Card>
+            </>
+          )}
+
+          {activeTab === 'products' && (
+            <>
+              <Card className="border border-purple-500/20 shadow-xl hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl">
+                <CardHeader className="pb-2 sm:pb-3">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-[10px] sm:text-xs lg:text-sm font-medium text-purple-300">Total Products</CardTitle>
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/30">
+                      <Package className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" />
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-1 sm:pt-2">
+                  <p className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-white">{products.length}</p>
+                  <p className="text-[9px] sm:text-[10px] lg:text-xs text-purple-400/70 mt-0.5 sm:mt-1">All products</p>
+                </CardContent>
+              </Card>
+
+              <Card className="border border-purple-500/20 shadow-xl hover:shadow-2xl hover:shadow-orange-500/20 transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl">
+                <CardHeader className="pb-2 sm:pb-3">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-[10px] sm:text-xs lg:text-sm font-medium text-purple-300">Pending</CardTitle>
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-lg shadow-orange-500/30">
+                      <Clock className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" />
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-1 sm:pt-2">
+                  <p className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-orange-400">{products.filter(p => p.status === 'pending').length}</p>
+                  <p className="text-[9px] sm:text-[10px] lg:text-xs text-orange-400/70 mt-0.5 sm:mt-1 font-medium">Awaiting approval</p>
+                </CardContent>
+              </Card>
+
+              <Card className="border border-purple-500/20 shadow-xl hover:shadow-2xl hover:shadow-green-500/20 transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl">
+                <CardHeader className="pb-2 sm:pb-3">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-[10px] sm:text-xs lg:text-sm font-medium text-purple-300">Active</CardTitle>
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-lg bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-lg shadow-green-500/30">
+                      <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" />
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-1 sm:pt-2">
+                  <p className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-green-400">{products.filter(p => p.status === 'active').length}</p>
+                  <p className="text-[9px] sm:text-[10px] lg:text-xs text-green-400/70 mt-0.5 sm:mt-1 font-medium">Live products</p>
+                </CardContent>
+              </Card>
+
+              <Card className="border border-purple-500/20 shadow-xl hover:shadow-2xl hover:shadow-gray-500/20 transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl">
+                <CardHeader className="pb-2 sm:pb-3">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-[10px] sm:text-xs lg:text-sm font-medium text-purple-300">Inactive</CardTitle>
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-lg bg-gradient-to-br from-gray-500 to-gray-600 flex items-center justify-center shadow-lg shadow-gray-500/30">
+                      <XCircle className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" />
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-1 sm:pt-2">
+                  <p className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-gray-400">{products.filter(p => p.status === 'inactive').length}</p>
+                  <p className="text-[9px] sm:text-[10px] lg:text-xs text-purple-400/70 mt-0.5 sm:mt-1">Not listed</p>
+                </CardContent>
+              </Card>
+            </>
+          )}
+
+          {activeTab === 'rfq' && (
+            <>
+              <Card className="border border-purple-500/20 shadow-xl hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl">
+                <CardHeader className="pb-2 sm:pb-3">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-[10px] sm:text-xs lg:text-sm font-medium text-purple-300">Total RFQs</CardTitle>
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/30">
+                      <FileText className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" />
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-1 sm:pt-2">
+                  <p className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-white">{rfqs.length}</p>
+                  <p className="text-[9px] sm:text-[10px] lg:text-xs text-purple-400/70 mt-0.5 sm:mt-1">All requests</p>
+                </CardContent>
+              </Card>
+
+              <Card className="border border-purple-500/20 shadow-xl hover:shadow-2xl hover:shadow-orange-500/20 transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl">
+                <CardHeader className="pb-2 sm:pb-3">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-[10px] sm:text-xs lg:text-sm font-medium text-purple-300">Pending</CardTitle>
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-lg shadow-orange-500/30">
+                      <Clock className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" />
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-1 sm:pt-2">
+                  <p className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-orange-400">{rfqs.filter(r => r.status === 'pending').length}</p>
+                  <p className="text-[9px] sm:text-[10px] lg:text-xs text-orange-400/70 mt-0.5 sm:mt-1 font-medium">Need quotes</p>
+                </CardContent>
+              </Card>
+
+              <Card className="border border-purple-500/20 shadow-xl hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl">
+                <CardHeader className="pb-2 sm:pb-3">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-[10px] sm:text-xs lg:text-sm font-medium text-purple-300">Quoted</CardTitle>
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/30">
+                      <DollarSign className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" />
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-1 sm:pt-2">
+                  <p className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-blue-400">{rfqs.filter(r => r.status === 'quoted').length}</p>
+                  <p className="text-[9px] sm:text-[10px] lg:text-xs text-blue-400/70 mt-0.5 sm:mt-1 font-medium">Sent to customer</p>
+                </CardContent>
+              </Card>
+
+              <Card className="border border-purple-500/20 shadow-xl hover:shadow-2xl hover:shadow-green-500/20 transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl">
+                <CardHeader className="pb-2 sm:pb-3">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-[10px] sm:text-xs lg:text-sm font-medium text-purple-300">Accepted</CardTitle>
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-lg bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-lg shadow-green-500/30">
+                      <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" />
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-1 sm:pt-2">
+                  <p className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-green-400">{rfqs.filter(r => r.status === 'accepted').length}</p>
+                  <p className="text-[9px] sm:text-[10px] lg:text-xs text-green-400/70 mt-0.5 sm:mt-1 font-medium">Confirmed</p>
+                </CardContent>
+              </Card>
+            </>
+          )}
+
+          {activeTab === 'material-inquiry' && (
+            <>
+              <Card className="border border-purple-500/20 shadow-xl hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl">
+                <CardHeader className="pb-2 sm:pb-3">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-[10px] sm:text-xs lg:text-sm font-medium text-purple-300">Total Inquiries</CardTitle>
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/30">
+                      <Package className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" />
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-1 sm:pt-2">
+                  <p className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-white">3</p>
+                  <p className="text-[9px] sm:text-[10px] lg:text-xs text-purple-400/70 mt-0.5 sm:mt-1">All inquiries</p>
+                </CardContent>
+              </Card>
+
+              <Card className="border border-purple-500/20 shadow-xl hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl">
+                <CardHeader className="pb-2 sm:pb-3">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-[10px] sm:text-xs lg:text-sm font-medium text-purple-300">New</CardTitle>
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/30">
+                      <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" />
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-1 sm:pt-2">
+                  <p className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-blue-400">2</p>
+                  <p className="text-[9px] sm:text-[10px] lg:text-xs text-blue-400/70 mt-0.5 sm:mt-1 font-medium">Unread</p>
+                </CardContent>
+              </Card>
+
+              <Card className="border border-purple-500/20 shadow-xl hover:shadow-2xl hover:shadow-red-500/20 transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl">
+                <CardHeader className="pb-2 sm:pb-3">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-[10px] sm:text-xs lg:text-sm font-medium text-purple-300">Urgent</CardTitle>
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-lg bg-gradient-to-br from-red-500 to-red-600 flex items-center justify-center shadow-lg shadow-red-500/30">
+                      <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" />
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-1 sm:pt-2">
+                  <p className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-red-400">0</p>
+                  <p className="text-[9px] sm:text-[10px] lg:text-xs text-red-400/70 mt-0.5 sm:mt-1 font-medium">High priority</p>
+                </CardContent>
+              </Card>
+
+              <Card className="border border-purple-500/20 shadow-xl hover:shadow-2xl hover:shadow-green-500/20 transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl">
+                <CardHeader className="pb-2 sm:pb-3">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-[10px] sm:text-xs lg:text-sm font-medium text-purple-300">Completed</CardTitle>
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-lg bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-lg shadow-green-500/30">
+                      <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" />
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-1 sm:pt-2">
+                  <p className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-green-400">1</p>
+                  <p className="text-[9px] sm:text-[10px] lg:text-xs text-green-400/70 mt-0.5 sm:mt-1 font-medium">Fulfilled</p>
+                </CardContent>
+              </Card>
+            </>
+          )}
         </div>
 
         {/* Tab Switcher */}
