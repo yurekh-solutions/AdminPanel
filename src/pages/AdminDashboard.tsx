@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Check, X, Eye, Search, Filter, TrendingUp, Users, Clock, CheckCircle, XCircle, LogOut, Zap, Package, ImageIcon, FileText, Download, BarChart3, PieChart as PieChartIcon, Activity, RefreshCw, Mail, Phone, Building2, Calendar, Award, AlertCircle, Trash2 } from 'lucide-react';
+import MaterialInquiryManager from './MaterialInquiryManager';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -144,7 +145,7 @@ interface Statistics {
 const AdminDashboard = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<'suppliers' | 'products' | 'rfq'>('suppliers');
+  const [activeTab, setActiveTab] = useState<'suppliers' | 'products' | 'rfq' | 'material-inquiry'>('suppliers');
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [rfqs, setRfqs] = useState<any[]>([]);
@@ -795,6 +796,18 @@ const AdminDashboard = () => {
                       {rfqs.filter(r => r.status === 'pending').length}
                     </Badge>
                   )}
+                </Button>
+                <Button
+                  onClick={() => setActiveTab('material-inquiry')}
+                  className={`flex-1 h-10 sm:h-11 lg:h-12 font-semibold text-xs sm:text-sm transition-all duration-300 ${
+                    activeTab === 'material-inquiry'
+                      ? 'bg-gradient-to-r from-purple-600 to-orange-600 text-white shadow-lg shadow-purple-500/50'
+                      : 'bg-transparent text-purple-300 hover:bg-purple-500/20 border border-purple-500/30'
+                  }`}
+                >
+                  <Package className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0" />
+                  <span className="hidden sm:inline">Material Inquiry</span>
+                  <span className="sm:hidden">Materials</span>
                 </Button>
               </div>
             </CardContent>
@@ -1495,6 +1508,13 @@ const AdminDashboard = () => {
               )}
             </CardContent>
           </Card>
+        )}
+
+        {/* Material Inquiry Section */}
+        {activeTab === 'material-inquiry' && (
+          <div className="h-screen overflow-hidden">
+            <MaterialInquiryManager />
+          </div>
         )}
         <Dialog open={showDetails} onOpenChange={setShowDetails}>
           <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] border-purple-500/30 backdrop-blur-xl">
