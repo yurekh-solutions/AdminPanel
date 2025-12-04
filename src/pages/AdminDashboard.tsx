@@ -36,19 +36,36 @@ import './AdminDashboard.css';
 
 // Get API URL - use production URL if on Vercel, otherwise use env var or localhost
 const getApiUrl = () => {
-  // Check if running on Vercel production
-  if (typeof window !== 'undefined' && window.location.hostname.includes('vercel.app')) {
-    return 'https://backendmatrix.onrender.com/api';
+  if (typeof window !== 'undefined') {
+    const hostname = window.location.hostname;
+    console.log('🌐 Admin Dashboard hostname:', hostname);
+    
+    // Check if running on localhost (development)
+    if (hostname === 'localhost' || hostname === '127.0.0.1') {
+      console.log('💻 Admin Dashboard running locally - using localhost backend');
+      return 'http://localhost:5000/api';
+    }
+    
+    // Vercel production domains
+    if (hostname.includes('vercel.app') || hostname.includes('ritzyard.com')) {
+      console.log('✅ Admin Dashboard running on Vercel - using production backend');
+      return 'https://backendmatrix.onrender.com/api';
+    }
   }
-  // Check if env var is set (for local dev and preview)
-  if (import.meta.env.VITE_API_URL && !import.meta.env.VITE_API_URL.includes('localhost')) {
+  
+  // Check if env var is set
+  if (import.meta.env.VITE_API_URL) {
+    console.log('⚙️ Admin Dashboard using VITE_API_URL:', import.meta.env.VITE_API_URL);
     return import.meta.env.VITE_API_URL;
   }
+  
   // Fallback to localhost for local development
+  console.log('💻 Admin Dashboard defaulting to localhost backend');
   return 'http://localhost:5000/api';
 };
 
 const API_URL = getApiUrl();
+console.log('📡 Admin Dashboard API URL:', API_URL);
 
 interface Supplier {
   _id: string;

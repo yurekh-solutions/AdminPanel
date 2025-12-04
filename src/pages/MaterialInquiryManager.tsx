@@ -37,18 +37,36 @@ import axios from 'axios';
 // Dynamic API URL based on environment
 const getApiUrl = () => {
   // Check if we're on Vercel (production)
-  if (typeof window !== 'undefined' && window.location.hostname.includes('vercel.app')) {
-    return 'https://backendmatrix.onrender.com/api';
+  if (typeof window !== 'undefined') {
+    const hostname = window.location.hostname;
+    console.log('🌐 Admin hostname:', hostname);
+    
+    // Check if running on localhost (development)
+    if (hostname === 'localhost' || hostname === '127.0.0.1') {
+      console.log('💻 Admin running locally - using localhost backend');
+      return 'http://localhost:5000/api';
+    }
+    
+    // Vercel production domains
+    if (hostname.includes('vercel.app') || hostname.includes('ritzyard.com')) {
+      console.log('✅ Admin running on Vercel - using production backend');
+      return 'https://backendmatrix.onrender.com/api';
+    }
   }
+  
   // Check if VITE_API_URL is set
   if (import.meta.env.VITE_API_URL) {
+    console.log('⚙️ Admin using VITE_API_URL:', import.meta.env.VITE_API_URL);
     return import.meta.env.VITE_API_URL;
   }
+  
   // Default to localhost for development
+  console.log('💻 Admin defaulting to localhost backend');
   return 'http://localhost:5000/api';
 };
 
 const API_BASE_URL = getApiUrl();
+console.log('📡 Admin API Base URL:', API_BASE_URL);
 
 interface Material {
   materialName: string;
