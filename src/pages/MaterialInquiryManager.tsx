@@ -432,10 +432,10 @@ const MaterialInquiryManager: React.FC = () => {
           </CardContent>
         </Card>
 
-        {/* Inquiries Table */}
+        {/* Inquiries Grid - Card Layout */}
         <Card className="bg-white/5 backdrop-blur-xl border-white/10">
           <CardHeader>
-            <CardTitle className="text-white flex items-center justify-between">
+            <CardTitle className="text-white flex items-center justify-between flex-wrap gap-4">
               <span>Material Inquiries ({filteredInquiries.length})</span>
               <Button onClick={fetchInquiries} className="bg-purple-600 hover:bg-purple-700">
                 Refresh
@@ -448,78 +448,100 @@ const MaterialInquiryManager: React.FC = () => {
             ) : filteredInquiries.length === 0 ? (
               <div className="text-center text-gray-400 py-12">No inquiries found</div>
             ) : (
-              <div className="overflow-x-auto overflow-y-auto max-h-[500px] scrollbar-thin scrollbar-thumb-purple-500/50 scrollbar-track-purple-900/20 hover:scrollbar-thumb-purple-500/70">
-                <table className="w-full">
-                  <thead className="sticky top-0 bg-[#2d1b3d] z-10">
-                    <tr className="border-b border-white/10">
-                      <th className="text-left text-gray-300 py-3 px-4">Inquiry #</th>
-                      <th className="text-left text-gray-300 py-3 px-4">Customer</th>
-                      <th className="text-left text-gray-300 py-3 px-4">Materials</th>
-                      <th className="text-left text-gray-300 py-3 px-4">Est. Value</th>
-                      <th className="text-left text-gray-300 py-3 px-4">Status</th>
-                      <th className="text-left text-gray-300 py-3 px-4">Priority</th>
-                      <th className="text-left text-gray-300 py-3 px-4">Date</th>
-                      <th className="text-left text-gray-300 py-3 px-4">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredInquiries.map((inquiry) => (
-                      <tr key={inquiry._id} className="border-b border-white/5 hover:bg-white/5">
-                        <td className="py-4 px-4">
-                          <span className="text-purple-400 font-mono">{inquiry.inquiryNumber}</span>
-                        </td>
-                        <td className="py-4 px-4">
-                          <div>
-                            <p className="text-white font-medium">{inquiry.customerName}</p>
+              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+                {filteredInquiries.map((inquiry) => (
+                  <Card key={inquiry._id} className="bg-gradient-to-br from-white/10 to-white/5 border-white/20 hover:border-purple-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20">
+                    <CardContent className="p-6 space-y-4">
+                      {/* Header with Inquiry Number */}
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <p className="text-purple-400 font-mono text-sm mb-1">Inquiry #</p>
+                          <p className="text-white font-bold text-lg">{inquiry.inquiryNumber}</p>
+                        </div>
+                        <div className="flex gap-2">
+                          {getStatusBadge(inquiry.status)}
+                        </div>
+                      </div>
+
+                      {/* Customer Info */}
+                      <div className="space-y-2 border-t border-white/10 pt-4">
+                        <div className="flex items-center gap-2">
+                          <Users className="w-4 h-4 text-purple-400" />
+                          <div className="flex-1">
+                            <p className="text-white font-medium text-sm">{inquiry.customerName}</p>
                             {inquiry.companyName && (
-                              <p className="text-gray-400 text-sm">{inquiry.companyName}</p>
+                              <p className="text-gray-400 text-xs">{inquiry.companyName}</p>
                             )}
                           </div>
-                        </td>
-                        <td className="py-4 px-4">
+                        </div>
+                        
+                        <div className="flex items-center gap-2">
+                          <Mail className="w-4 h-4 text-purple-400" />
+                          <p className="text-gray-300 text-xs truncate">{inquiry.email}</p>
+                        </div>
+                        
+                        <div className="flex items-center gap-2">
+                          <Phone className="w-4 h-4 text-purple-400" />
+                          <p className="text-gray-300 text-xs">{inquiry.phone}</p>
+                        </div>
+                      </div>
+
+                      {/* Materials & Value */}
+                      <div className="grid grid-cols-2 gap-3 border-t border-white/10 pt-4">
+                        <div>
+                          <p className="text-gray-400 text-xs mb-1">Materials</p>
                           <Badge className="bg-blue-500/20 text-blue-400 border-0">
                             {inquiry.materials.length} items
                           </Badge>
-                        </td>
-                        <td className="py-4 px-4">
-                          <span className="text-green-400 font-semibold">
+                        </div>
+                        <div>
+                          <p className="text-gray-400 text-xs mb-1">Est. Value</p>
+                          <p className="text-green-400 font-semibold text-sm">
                             {inquiry.totalEstimatedValue
                               ? `₹${inquiry.totalEstimatedValue.toLocaleString()}`
                               : 'N/A'}
-                          </span>
-                        </td>
-                        <td className="py-4 px-4">{getStatusBadge(inquiry.status)}</td>
-                        <td className="py-4 px-4">{getPriorityBadge(inquiry.priority)}</td>
-                        <td className="py-4 px-4">
-                          <span className="text-gray-400 text-sm">
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Priority & Date */}
+                      <div className="grid grid-cols-2 gap-3 border-t border-white/10 pt-4">
+                        <div>
+                          <p className="text-gray-400 text-xs mb-1">Priority</p>
+                          {getPriorityBadge(inquiry.priority)}
+                        </div>
+                        <div>
+                          <p className="text-gray-400 text-xs mb-1">Date</p>
+                          <p className="text-gray-300 text-xs">
                             {new Date(inquiry.createdAt).toLocaleDateString()}
-                          </span>
-                        </td>
-                        <td className="py-4 px-4">
-                          <div className="flex gap-2">
-                            <Button
-                              size="sm"
-                              onClick={() => {
-                                setSelectedInquiry(inquiry);
-                                setShowDetailModal(true);
-                              }}
-                              className="bg-purple-600 hover:bg-purple-700"
-                            >
-                              <Eye className="w-4 h-4" />
-                            </Button>
-                            <Button
-                              size="sm"
-                              onClick={() => deleteInquiry(inquiry._id)}
-                              className="bg-red-600 hover:bg-red-700"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </Button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Actions */}
+                      <div className="flex gap-2 border-t border-white/10 pt-4">
+                        <Button
+                          size="sm"
+                          onClick={() => {
+                            setSelectedInquiry(inquiry);
+                            setShowDetailModal(true);
+                          }}
+                          className="flex-1 bg-purple-600 hover:bg-purple-700"
+                        >
+                          <Eye className="w-4 h-4 mr-2" />
+                          View Details
+                        </Button>
+                        <Button
+                          size="sm"
+                          onClick={() => deleteInquiry(inquiry._id)}
+                          className="bg-red-600 hover:bg-red-700"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
               </div>
             )}
           </CardContent>
