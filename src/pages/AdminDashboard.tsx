@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Check, X, Eye, Search, Filter, TrendingUp, Users, Clock, CheckCircle, XCircle, LogOut, Zap, Package, ImageIcon, FileText, Download, BarChart3, PieChart as PieChartIcon, Activity, RefreshCw, Mail, Phone, Building2, Calendar, Award, AlertCircle, Trash2 } from 'lucide-react';
+import { Check, X, Eye, Search, Filter, TrendingUp, Users, Clock, CheckCircle, XCircle, LogOut, Zap, Package, ImageIcon, FileText, Download, BarChart3, PieChart as PieChartIcon, Activity, RefreshCw, Mail, Phone, Building2, Calendar, Award, AlertCircle, Trash2, DollarSign } from 'lucide-react';
 import MaterialInquiryManager from './MaterialInquiryManager';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
