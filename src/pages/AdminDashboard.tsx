@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Check, X, Eye, Search, Filter, TrendingUp, Users, Clock, CheckCircle, XCircle, LogOut, Zap, Package, ImageIcon, FileText, Download, BarChart3, PieChart as PieChartIcon, Activity, RefreshCw, Mail, Phone, Building2, Calendar, Award, AlertCircle, Trash2, DollarSign } from 'lucide-react';
 import MaterialInquiryManager from './MaterialInquiryManager';
+import ProductInquiryManager from './ProductInquiryManager';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -162,7 +163,7 @@ interface Statistics {
 const AdminDashboard = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<'suppliers' | 'products' | 'rfq' | 'material-inquiry'>('suppliers');
+  const [activeTab, setActiveTab] = useState<'suppliers' | 'products' | 'rfq' | 'material-inquiry' | 'product-inquiry'>('suppliers');
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [rfqs, setRfqs] = useState<any[]>([]);
@@ -1022,6 +1023,18 @@ const AdminDashboard = () => {
                   <span className="hidden sm:inline">Material Inquiry</span>
                   <span className="sm:hidden">Materials</span>
                 </Button>
+                <Button
+                  onClick={() => setActiveTab('product-inquiry')}
+                  className={`flex-1 h-10 sm:h-11 lg:h-12 font-semibold text-xs sm:text-sm transition-all duration-300 ${
+                    activeTab === 'product-inquiry'
+                      ? 'bg-gradient-to-r from-purple-600 to-orange-600 text-white shadow-lg shadow-purple-500/50'
+                      : 'bg-transparent text-purple-300 hover:bg-purple-500/20 border border-purple-500/30'
+                  }`}
+                >
+                  <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0" />
+                  <span className="hidden sm:inline">Product Inquiry</span>
+                  <span className="sm:hidden">Products</span>
+                </Button>
               </div>
             </CardContent>
           </Card>
@@ -1727,6 +1740,13 @@ const AdminDashboard = () => {
         {activeTab === 'material-inquiry' && (
           <div className="overflow-visible">
             <MaterialInquiryManager />
+          </div>
+        )}
+
+        {/* Product Inquiry Section */}
+        {activeTab === 'product-inquiry' && (
+          <div className="overflow-visible">
+            <ProductInquiryManager />
           </div>
         )}
         <Dialog open={showDetails} onOpenChange={setShowDetails}>
