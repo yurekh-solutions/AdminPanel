@@ -9,36 +9,19 @@ import { useToast } from '@/hooks/use-toast';
 
 // Get API URL - use production URL if on Vercel, otherwise use env var or localhost
 const getApiUrl = () => {
-  if (typeof window !== 'undefined') {
-    const hostname = window.location.hostname;
-    console.log('🌐 Admin Login hostname:', hostname);
-    
-    // Check if running on localhost (development)
-    if (hostname === 'localhost' || hostname === '127.0.0.1') {
-      console.log('💻 Admin Login running locally - using localhost backend');
-      return 'http://localhost:5000/api';
-    }
-    
-    // Vercel production domains
-    if (hostname.includes('vercel.app') || hostname.includes('ritzyard.com')) {
-      console.log('✅ Admin Login running on Vercel - using production backend');
-      return 'https://backendmatrix.onrender.com/api';
-    }
+  // Check if running on Vercel production
+  if (window.location.hostname.includes('vercel.app')) {
+    return 'https://backendmatrix.onrender.com/api';
   }
-  
-  // Check if env var is set
-  if (import.meta.env.VITE_API_URL) {
-    console.log('⚙️ Admin Login using VITE_API_URL:', import.meta.env.VITE_API_URL);
+  // Check if env var is set (for local dev and preview)
+  if (import.meta.env.VITE_API_URL && !import.meta.env.VITE_API_URL.includes('localhost')) {
     return import.meta.env.VITE_API_URL;
   }
-  
   // Fallback to localhost for local development
-  console.log('💻 Admin Login defaulting to localhost backend');
   return 'http://localhost:5000/api';
 };
 
 const API_URL = getApiUrl();
-console.log('📡 Admin Login API URL:', API_URL);
 
 const AdminLogin = () => {
   const navigate = useNavigate();

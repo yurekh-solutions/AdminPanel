@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Check, X, Eye, Search, Filter, TrendingUp, Users, Clock, CheckCircle, XCircle, LogOut, Zap, Package, ImageIcon, FileText, Download, BarChart3, PieChart as PieChartIcon, Activity, RefreshCw, Mail, Phone, Building2, Calendar, Award, AlertCircle, Trash2, DollarSign } from 'lucide-react';
+import { Check, X, Eye, Search, Filter, TrendingUp, Users, Clock, CheckCircle, XCircle, LogOut, Zap, Package, ImageIcon, FileText, Download, BarChart3, PieChart as PieChartIcon, Activity, RefreshCw, Mail, Phone, Building2, Calendar, Award, AlertCircle, Trash2 } from 'lucide-react';
 import MaterialInquiryManager from './MaterialInquiryManager';
-import ProductInquiryManager from './ProductInquiryManager';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -37,36 +36,19 @@ import './AdminDashboard.css';
 
 // Get API URL - use production URL if on Vercel, otherwise use env var or localhost
 const getApiUrl = () => {
-  if (typeof window !== 'undefined') {
-    const hostname = window.location.hostname;
-    console.log('🌐 Admin Dashboard hostname:', hostname);
-    
-    // Check if running on localhost (development)
-    if (hostname === 'localhost' || hostname === '127.0.0.1') {
-      console.log('💻 Admin Dashboard running locally - using localhost backend');
-      return 'http://localhost:5000/api';
-    }
-    
-    // Vercel production domains
-    if (hostname.includes('vercel.app') || hostname.includes('ritzyard.com')) {
-      console.log('✅ Admin Dashboard running on Vercel - using production backend');
-      return 'https://backendmatrix.onrender.com/api';
-    }
+  // Check if running on Vercel production
+  if (typeof window !== 'undefined' && window.location.hostname.includes('vercel.app')) {
+    return 'https://backendmatrix.onrender.com/api';
   }
-  
-  // Check if env var is set
-  if (import.meta.env.VITE_API_URL) {
-    console.log('⚙️ Admin Dashboard using VITE_API_URL:', import.meta.env.VITE_API_URL);
+  // Check if env var is set (for local dev and preview)
+  if (import.meta.env.VITE_API_URL && !import.meta.env.VITE_API_URL.includes('localhost')) {
     return import.meta.env.VITE_API_URL;
   }
-  
   // Fallback to localhost for local development
-  console.log('💻 Admin Dashboard defaulting to localhost backend');
   return 'http://localhost:5000/api';
 };
 
 const API_URL = getApiUrl();
-console.log('📡 Admin Dashboard API URL:', API_URL);
 
 interface Supplier {
   _id: string;
@@ -163,7 +145,7 @@ interface Statistics {
 const AdminDashboard = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<'suppliers' | 'products' | 'rfq' | 'material-inquiry' | 'product-inquiry'>('suppliers');
+  const [activeTab, setActiveTab] = useState<'suppliers' | 'products' | 'rfq' | 'material-inquiry'>('suppliers');
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [rfqs, setRfqs] = useState<any[]>([]);
@@ -687,275 +669,79 @@ const AdminDashboard = () => {
           </Card>
         </div>
 
-        {/* Statistics Cards - Dynamic based on active tab */}
+        {/* Statistics Cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-5 lg:gap-6 mb-6 sm:mb-8 lg:mb-10">
-          {activeTab === 'suppliers' && (
-            <>
-              <Card className="border border-purple-500/20 shadow-xl hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl">
-                <CardHeader className="pb-2 sm:pb-3">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-[10px] sm:text-xs lg:text-sm font-medium text-purple-300">Total</CardTitle>
-                    <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/30">
-                      <Users className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" />
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="pt-1 sm:pt-2">
-                  <p className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-white">{statistics.total}</p>
-                  <p className="text-[9px] sm:text-[10px] lg:text-xs text-purple-400/70 mt-0.5 sm:mt-1">All submissions</p>
-                  <div className="mt-1 sm:mt-2 flex items-center gap-1">
-                    <TrendingUp className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-blue-400" />
-                    <span className="text-[8px] sm:text-[9px] lg:text-[10px] text-blue-400 font-medium">+12% month</span>
-                  </div>
-                </CardContent>
-              </Card>
+          <Card className="border border-purple-500/20 shadow-xl hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl">
+            <CardHeader className="pb-2 sm:pb-3">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-[10px] sm:text-xs lg:text-sm font-medium text-purple-300">Total</CardTitle>
+                <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/30">
+                  <Users className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" />
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="pt-1 sm:pt-2">
+              <p className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-white">{statistics.total}</p>
+              <p className="text-[9px] sm:text-[10px] lg:text-xs text-purple-400/70 mt-0.5 sm:mt-1">All submissions</p>
+              <div className="mt-1 sm:mt-2 flex items-center gap-1">
+                <TrendingUp className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-blue-400" />
+                <span className="text-[8px] sm:text-[9px] lg:text-[10px] text-blue-400 font-medium">+12% month</span>
+              </div>
+            </CardContent>
+          </Card>
 
-              <Card className="border border-purple-500/20 shadow-xl hover:shadow-2xl hover:shadow-orange-500/20 transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl">
-                <CardHeader className="pb-2 sm:pb-3">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-[10px] sm:text-xs lg:text-sm font-medium text-purple-300">Pending</CardTitle>
-                    <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-lg shadow-orange-500/30">
-                      <Clock className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" />
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="pt-1 sm:pt-2">
-                  <p className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-orange-400">{statistics.pending}</p>
-                  <p className="text-[9px] sm:text-[10px] lg:text-xs text-orange-400/70 mt-0.5 sm:mt-1 font-medium">Need action</p>
-                  <div className="mt-1 sm:mt-2 flex items-center gap-1">
-                    <AlertCircle className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-orange-400" />
-                    <span className="text-[8px] sm:text-[9px] lg:text-[10px] text-orange-400 font-medium">Review</span>
-                  </div>
-                </CardContent>
-              </Card>
+          <Card className="border border-purple-500/20 shadow-xl hover:shadow-2xl hover:shadow-orange-500/20 transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl">
+            <CardHeader className="pb-2 sm:pb-3">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-[10px] sm:text-xs lg:text-sm font-medium text-purple-300">Pending</CardTitle>
+                <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-lg shadow-orange-500/30">
+                  <Clock className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" />
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="pt-1 sm:pt-2">
+              <p className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-orange-400">{statistics.pending}</p>
+              <p className="text-[9px] sm:text-[10px] lg:text-xs text-orange-400/70 mt-0.5 sm:mt-1 font-medium">Need action</p>
+              <div className="mt-1 sm:mt-2 flex items-center gap-1">
+                <AlertCircle className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-orange-400" />
+                <span className="text-[8px] sm:text-[9px] lg:text-[10px] text-orange-400 font-medium">Review</span>
+              </div>
+            </CardContent>
+          </Card>
 
-              <Card className="border border-purple-500/20 shadow-xl hover:shadow-2xl hover:shadow-purple-500/20 transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl">
-                <CardHeader className="pb-2 sm:pb-3">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-[10px] sm:text-xs lg:text-sm font-medium text-purple-300">Approved</CardTitle>
-                    <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-lg bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/30">
-                      <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" />
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="pt-1 sm:pt-2">
-                  <p className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-purple-400">{statistics.approved}</p>
-                  <p className="text-[9px] sm:text-[10px] lg:text-xs text-purple-400/70 mt-0.5 sm:mt-1 font-medium">Active</p>
-                  <div className="mt-1 sm:mt-2 flex items-center gap-1">
-                    <Award className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-purple-400" />
-                    <span className="text-[8px] sm:text-[9px] lg:text-[10px] text-purple-400 font-medium">Verified</span>
-                  </div>
-                </CardContent>
-              </Card>
+          <Card className="border border-purple-500/20 shadow-xl hover:shadow-2xl hover:shadow-purple-500/20 transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl">
+            <CardHeader className="pb-2 sm:pb-3">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-[10px] sm:text-xs lg:text-sm font-medium text-purple-300">Approved</CardTitle>
+                <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-lg bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/30">
+                  <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" />
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="pt-1 sm:pt-2">
+              <p className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-purple-400">{statistics.approved}</p>
+              <p className="text-[9px] sm:text-[10px] lg:text-xs text-purple-400/70 mt-0.5 sm:mt-1 font-medium">Active</p>
+              <div className="mt-1 sm:mt-2 flex items-center gap-1">
+                <Award className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-purple-400" />
+                <span className="text-[8px] sm:text-[9px] lg:text-[10px] text-purple-400 font-medium">Verified</span>
+              </div>
+            </CardContent>
+          </Card>
 
-              <Card className="border border-purple-500/20 shadow-xl hover:shadow-2xl hover:shadow-pink-500/20 transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl">
-                <CardHeader className="pb-2 sm:pb-3">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-[10px] sm:text-xs lg:text-sm font-medium text-purple-300">Rejected</CardTitle>
-                    <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-lg bg-gradient-to-br from-pink-500 to-pink-600 flex items-center justify-center shadow-lg shadow-pink-500/30">
-                      <XCircle className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" />
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="pt-1 sm:pt-2">
-                  <p className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-pink-400">{statistics.rejected}</p>
-                  <p className="text-[9px] sm:text-[10px] lg:text-xs text-purple-400/70 mt-0.5 sm:mt-1">Declined</p>
-                </CardContent>
-              </Card>
-            </>
-          )}
-
-          {activeTab === 'products' && (
-            <>
-              <Card className="border border-purple-500/20 shadow-xl hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl">
-                <CardHeader className="pb-2 sm:pb-3">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-[10px] sm:text-xs lg:text-sm font-medium text-purple-300">Total Products</CardTitle>
-                    <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/30">
-                      <Package className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" />
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="pt-1 sm:pt-2">
-                  <p className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-white">{products.length}</p>
-                  <p className="text-[9px] sm:text-[10px] lg:text-xs text-purple-400/70 mt-0.5 sm:mt-1">All products</p>
-                </CardContent>
-              </Card>
-
-              <Card className="border border-purple-500/20 shadow-xl hover:shadow-2xl hover:shadow-orange-500/20 transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl">
-                <CardHeader className="pb-2 sm:pb-3">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-[10px] sm:text-xs lg:text-sm font-medium text-purple-300">Pending</CardTitle>
-                    <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-lg shadow-orange-500/30">
-                      <Clock className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" />
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="pt-1 sm:pt-2">
-                  <p className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-orange-400">{products.filter(p => p.status === 'pending').length}</p>
-                  <p className="text-[9px] sm:text-[10px] lg:text-xs text-orange-400/70 mt-0.5 sm:mt-1 font-medium">Awaiting approval</p>
-                </CardContent>
-              </Card>
-
-              <Card className="border border-purple-500/20 shadow-xl hover:shadow-2xl hover:shadow-green-500/20 transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl">
-                <CardHeader className="pb-2 sm:pb-3">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-[10px] sm:text-xs lg:text-sm font-medium text-purple-300">Active</CardTitle>
-                    <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-lg bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-lg shadow-green-500/30">
-                      <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" />
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="pt-1 sm:pt-2">
-                  <p className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-green-400">{products.filter(p => p.status === 'active').length}</p>
-                  <p className="text-[9px] sm:text-[10px] lg:text-xs text-green-400/70 mt-0.5 sm:mt-1 font-medium">Live products</p>
-                </CardContent>
-              </Card>
-
-              <Card className="border border-purple-500/20 shadow-xl hover:shadow-2xl hover:shadow-gray-500/20 transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl">
-                <CardHeader className="pb-2 sm:pb-3">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-[10px] sm:text-xs lg:text-sm font-medium text-purple-300">Inactive</CardTitle>
-                    <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-lg bg-gradient-to-br from-gray-500 to-gray-600 flex items-center justify-center shadow-lg shadow-gray-500/30">
-                      <XCircle className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" />
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="pt-1 sm:pt-2">
-                  <p className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-gray-400">{products.filter(p => p.status === 'inactive').length}</p>
-                  <p className="text-[9px] sm:text-[10px] lg:text-xs text-purple-400/70 mt-0.5 sm:mt-1">Not listed</p>
-                </CardContent>
-              </Card>
-            </>
-          )}
-
-          {activeTab === 'rfq' && (
-            <>
-              <Card className="border border-purple-500/20 shadow-xl hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl">
-                <CardHeader className="pb-2 sm:pb-3">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-[10px] sm:text-xs lg:text-sm font-medium text-purple-300">Total RFQs</CardTitle>
-                    <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/30">
-                      <FileText className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" />
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="pt-1 sm:pt-2">
-                  <p className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-white">{rfqs.length}</p>
-                  <p className="text-[9px] sm:text-[10px] lg:text-xs text-purple-400/70 mt-0.5 sm:mt-1">All requests</p>
-                </CardContent>
-              </Card>
-
-              <Card className="border border-purple-500/20 shadow-xl hover:shadow-2xl hover:shadow-orange-500/20 transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl">
-                <CardHeader className="pb-2 sm:pb-3">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-[10px] sm:text-xs lg:text-sm font-medium text-purple-300">Pending</CardTitle>
-                    <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-lg shadow-orange-500/30">
-                      <Clock className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" />
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="pt-1 sm:pt-2">
-                  <p className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-orange-400">{rfqs.filter(r => r.status === 'pending').length}</p>
-                  <p className="text-[9px] sm:text-[10px] lg:text-xs text-orange-400/70 mt-0.5 sm:mt-1 font-medium">Need quotes</p>
-                </CardContent>
-              </Card>
-
-              <Card className="border border-purple-500/20 shadow-xl hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl">
-                <CardHeader className="pb-2 sm:pb-3">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-[10px] sm:text-xs lg:text-sm font-medium text-purple-300">Quoted</CardTitle>
-                    <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/30">
-                      <DollarSign className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" />
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="pt-1 sm:pt-2">
-                  <p className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-blue-400">{rfqs.filter(r => r.status === 'quoted').length}</p>
-                  <p className="text-[9px] sm:text-[10px] lg:text-xs text-blue-400/70 mt-0.5 sm:mt-1 font-medium">Sent to customer</p>
-                </CardContent>
-              </Card>
-
-              <Card className="border border-purple-500/20 shadow-xl hover:shadow-2xl hover:shadow-green-500/20 transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl">
-                <CardHeader className="pb-2 sm:pb-3">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-[10px] sm:text-xs lg:text-sm font-medium text-purple-300">Accepted</CardTitle>
-                    <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-lg bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-lg shadow-green-500/30">
-                      <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" />
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="pt-1 sm:pt-2">
-                  <p className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-green-400">{rfqs.filter(r => r.status === 'accepted').length}</p>
-                  <p className="text-[9px] sm:text-[10px] lg:text-xs text-green-400/70 mt-0.5 sm:mt-1 font-medium">Confirmed</p>
-                </CardContent>
-              </Card>
-            </>
-          )}
-
-          {activeTab === 'material-inquiry' && (
-            <>
-              <Card className="border border-purple-500/20 shadow-xl hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl">
-                <CardHeader className="pb-2 sm:pb-3">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-[10px] sm:text-xs lg:text-sm font-medium text-purple-300">Total Inquiries</CardTitle>
-                    <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/30">
-                      <Package className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" />
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="pt-1 sm:pt-2">
-                  <p className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-white">3</p>
-                  <p className="text-[9px] sm:text-[10px] lg:text-xs text-purple-400/70 mt-0.5 sm:mt-1">All inquiries</p>
-                </CardContent>
-              </Card>
-
-              <Card className="border border-purple-500/20 shadow-xl hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl">
-                <CardHeader className="pb-2 sm:pb-3">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-[10px] sm:text-xs lg:text-sm font-medium text-purple-300">New</CardTitle>
-                    <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/30">
-                      <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" />
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="pt-1 sm:pt-2">
-                  <p className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-blue-400">2</p>
-                  <p className="text-[9px] sm:text-[10px] lg:text-xs text-blue-400/70 mt-0.5 sm:mt-1 font-medium">Unread</p>
-                </CardContent>
-              </Card>
-
-              <Card className="border border-purple-500/20 shadow-xl hover:shadow-2xl hover:shadow-red-500/20 transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl">
-                <CardHeader className="pb-2 sm:pb-3">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-[10px] sm:text-xs lg:text-sm font-medium text-purple-300">Urgent</CardTitle>
-                    <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-lg bg-gradient-to-br from-red-500 to-red-600 flex items-center justify-center shadow-lg shadow-red-500/30">
-                      <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" />
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="pt-1 sm:pt-2">
-                  <p className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-red-400">0</p>
-                  <p className="text-[9px] sm:text-[10px] lg:text-xs text-red-400/70 mt-0.5 sm:mt-1 font-medium">High priority</p>
-                </CardContent>
-              </Card>
-
-              <Card className="border border-purple-500/20 shadow-xl hover:shadow-2xl hover:shadow-green-500/20 transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl">
-                <CardHeader className="pb-2 sm:pb-3">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-[10px] sm:text-xs lg:text-sm font-medium text-purple-300">Completed</CardTitle>
-                    <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-lg bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-lg shadow-green-500/30">
-                      <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" />
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="pt-1 sm:pt-2">
-                  <p className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-green-400">1</p>
-                  <p className="text-[9px] sm:text-[10px] lg:text-xs text-green-400/70 mt-0.5 sm:mt-1 font-medium">Fulfilled</p>
-                </CardContent>
-              </Card>
-            </>
-          )}
+          <Card className="border border-purple-500/20 shadow-xl hover:shadow-2xl hover:shadow-pink-500/20 transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] backdrop-blur-xl">
+            <CardHeader className="pb-2 sm:pb-3">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-[10px] sm:text-xs lg:text-sm font-medium text-purple-300">Rejected</CardTitle>
+                <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-lg bg-gradient-to-br from-pink-500 to-pink-600 flex items-center justify-center shadow-lg shadow-pink-500/30">
+                  <XCircle className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" />
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="pt-1 sm:pt-2">
+              <p className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-pink-400">{statistics.rejected}</p>
+              <p className="text-[9px] sm:text-[10px] lg:text-xs text-purple-400/70 mt-0.5 sm:mt-1">Declined</p>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Tab Switcher */}
@@ -1022,18 +808,6 @@ const AdminDashboard = () => {
                   <Package className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0" />
                   <span className="hidden sm:inline">Material Inquiry</span>
                   <span className="sm:hidden">Materials</span>
-                </Button>
-                <Button
-                  onClick={() => setActiveTab('product-inquiry')}
-                  className={`flex-1 h-10 sm:h-11 lg:h-12 font-semibold text-xs sm:text-sm transition-all duration-300 ${
-                    activeTab === 'product-inquiry'
-                      ? 'bg-gradient-to-r from-purple-600 to-orange-600 text-white shadow-lg shadow-purple-500/50'
-                      : 'bg-transparent text-purple-300 hover:bg-purple-500/20 border border-purple-500/30'
-                  }`}
-                >
-                  <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0" />
-                  <span className="hidden sm:inline">Product Inquiry</span>
-                  <span className="sm:hidden">Products</span>
                 </Button>
               </div>
             </CardContent>
@@ -1417,7 +1191,7 @@ const AdminDashboard = () => {
               ) : filteredSuppliers.length === 0 ? (
                 <p className="text-center py-8 text-purple-400/70 text-sm sm:text-base">No suppliers found</p>
               ) : (
-                <div className="overflow-x-auto overflow-y-auto max-h-[600px] scrollbar-thin scrollbar-thumb-purple-500/50 scrollbar-track-purple-900/20 hover:scrollbar-thumb-purple-500/70">
+                <div className="overflow-x-auto scrollbar-hide">
                   <table className="w-full min-w-[800px]">
                     <thead className="bg-gradient-to-r from-purple-500/20 to-orange-500/20">
                       <tr>
@@ -1529,7 +1303,7 @@ const AdminDashboard = () => {
                   <p className="text-purple-400/50 text-xs sm:text-sm mt-2">Products will appear here once suppliers add them</p>
                 </div>
               ) : (
-                <div className="overflow-x-auto overflow-y-auto max-h-[600px] scrollbar-thin scrollbar-thumb-purple-500/50 scrollbar-track-purple-900/20 hover:scrollbar-thumb-purple-500/70">
+                <div className="overflow-x-auto scrollbar-hide">
                   <table className="w-full min-w-[900px]">
                     <thead className="bg-gradient-to-r from-purple-500/20 to-orange-500/20">
                       <tr>
@@ -1696,7 +1470,7 @@ const AdminDashboard = () => {
                   <p className="text-purple-400/70 text-xs sm:text-base">No RFQs found</p>
                 </div>
               ) : (
-                <div className="w-full overflow-x-auto overflow-y-auto max-h-[600px] scrollbar-thin scrollbar-thumb-purple-500/50 scrollbar-track-purple-900/20 hover:scrollbar-thumb-purple-500/70 -mx-2 sm:-mx-3 md:-mx-4">
+                <div className="w-full overflow-x-auto scrollbar-hide -mx-2 sm:-mx-3 md:-mx-4">
                   <table className="w-full text-[11px] sm:text-xs md:text-sm">
                     <thead className="bg-gradient-to-r from-purple-500/20 to-orange-500/20 sticky top-0">
                       <tr>
@@ -1738,15 +1512,8 @@ const AdminDashboard = () => {
 
         {/* Material Inquiry Section */}
         {activeTab === 'material-inquiry' && (
-          <div className="overflow-visible">
+          <div className="h-screen overflow-hidden">
             <MaterialInquiryManager />
-          </div>
-        )}
-
-        {/* Product Inquiry Section */}
-        {activeTab === 'product-inquiry' && (
-          <div className="overflow-visible">
-            <ProductInquiryManager />
           </div>
         )}
         <Dialog open={showDetails} onOpenChange={setShowDetails}>
