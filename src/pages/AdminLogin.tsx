@@ -36,29 +36,41 @@ const AdminLogin = () => {
     try {
       // Use backend API for authentication
       console.log('🔐 Admin Login - Connecting to backend with API URL:', API_URL);
+      console.log('📧 Attempting login with email:', formData.email);
+      
       const response = await fetch(`${API_URL}/auth/admin/login`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
         body: JSON.stringify(formData),
+        mode: 'cors',
+        credentials: 'omit',
       });
 
+      console.log('📊 Response status:', response.status);
       const data = await response.json();
+      console.log('📋 Response data:', data);
 
-      if (data.success) {
+      if (response.ok && data.success) {
         localStorage.setItem('adminToken', data.token);
         localStorage.setItem('adminUser', JSON.stringify(data.user));
+        console.log('✅ Login successful, redirecting to dashboard');
         toast({
           title: 'Success',
           description: 'Logged in successfully',
         });
         navigate('/dashboard');
       } else {
-        throw new Error(data.message);
+        console.error('❌ Login failed:', data.message);
+        throw new Error(data.message || 'Invalid credentials');
       }
-    } catch (error) {
+    } catch (error: any) {
+      console.error('❌ Login error:', error);
       toast({
         title: 'Error',
-        description: 'Invalid credentials or backend server not running',
+        description: error.message || 'Invalid credentials or backend server not running',
         variant: 'destructive',
       });
     } finally {
