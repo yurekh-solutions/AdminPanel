@@ -325,6 +325,66 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleApproveRFQ = async (id: string) => {
+    try {
+      const response = await fetch(`${API_URL}/admin/rfqs/${id}/approve`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        toast({
+          title: 'Success',
+          description: 'RFQ approved successfully',
+        });
+        fetchRFQs();
+      } else {
+        throw new Error(data.message);
+      }
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: error instanceof Error ? error.message : 'Failed to approve RFQ',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const handleRejectRFQ = async (id: string, reason?: string) => {
+    try {
+      const response = await fetch(`${API_URL}/admin/rfqs/${id}/reject`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ reason }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        toast({
+          title: 'Success',
+          description: 'RFQ rejected successfully',
+        });
+        fetchRFQs();
+      } else {
+        throw new Error(data.message);
+      }
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: error instanceof Error ? error.message : 'Failed to reject RFQ',
+        variant: 'destructive',
+      });
+    }
+  };
+
   const handleApproveProduct = async (id: string) => {
     try {
       const response = await fetch(`${API_URL}/admin/products/${id}/approve`, {
@@ -1480,26 +1540,69 @@ const AdminDashboard = () => {
                         <th className="px-2 sm:px-3 md:px-4 py-2 sm:py-3 text-left font-semibold text-purple-300 whitespace-nowrap hidden lg:table-cell">Location</th>
                         <th className="px-2 sm:px-3 md:px-4 py-2 sm:py-3 text-left font-semibold text-purple-300 whitespace-nowrap">Status</th>
                         <th className="px-2 sm:px-3 md:px-4 py-2 sm:py-3 text-left font-semibold text-purple-300 whitespace-nowrap hidden sm:table-cell">Date</th>
+                        <th className="px-2 sm:px-3 md:px-4 py-2 sm:py-3 text-left font-semibold text-purple-300 whitespace-nowrap">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-purple-500/10">
                       {rfqs.map((rfq) => (
-                        <tr key={rfq._id} className="hover:bg-purple-500/10 transition-colors cursor-pointer" onClick={() => { setSelectedRFQ(rfq); setShowRFQDetails(true); }}>
-                          <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
+                        <tr key={rfq._id} className="hover:bg-purple-500/10 transition-colors">
+                          <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3 cursor-pointer" onClick={() => { setSelectedRFQ(rfq); setShowRFQDetails(true); }}>
                             <div className="min-w-0">
                               <p className="text-[11px] sm:text-xs font-semibold text-white truncate">{rfq.customerName}</p>
                               <p className="text-[9px] sm:text-xs text-purple-400/70 truncate">{rfq.email}</p>
                             </div>
                           </td>
-                          <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3 hidden sm:table-cell text-[10px] sm:text-xs text-white truncate">{rfq.productName}</td>
-                          <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3 hidden md:table-cell text-[10px] sm:text-xs text-white text-center">{rfq.quantity}</td>
-                          <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3 hidden lg:table-cell text-[10px] sm:text-xs text-purple-300 truncate">{rfq.deliveryLocation}</td>
-                          <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
+                          <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3 hidden sm:table-cell text-[10px] sm:text-xs text-white truncate cursor-pointer" onClick={() => { setSelectedRFQ(rfq); setShowRFQDetails(true); }}>{rfq.productName}</td>
+                          <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3 hidden md:table-cell text-[10px] sm:text-xs text-white text-center cursor-pointer" onClick={() => { setSelectedRFQ(rfq); setShowRFQDetails(true); }}>{rfq.quantity}</td>
+                          <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3 hidden lg:table-cell text-[10px] sm:text-xs text-purple-300 truncate cursor-pointer" onClick={() => { setSelectedRFQ(rfq); setShowRFQDetails(true); }}>{rfq.deliveryLocation}</td>
+                          <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3 cursor-pointer" onClick={() => { setSelectedRFQ(rfq); setShowRFQDetails(true); }}>
                             <Badge className={`text-[10px] sm:text-xs py-0.5 px-1.5 ${rfq.status === 'pending' ? 'bg-orange-500/20 text-orange-300 border-orange-500/30' : rfq.status === 'quoted' ? 'bg-blue-500/20 text-blue-300 border-blue-500/30' : rfq.status === 'accepted' ? 'bg-green-500/20 text-green-300 border-green-500/30' : 'bg-pink-500/20 text-pink-300 border-pink-500/30'}`}>
                               {rfq.status}
                             </Badge>
                           </td>
-                          <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3 hidden sm:table-cell text-[9px] sm:text-xs text-purple-300 whitespace-nowrap">{new Date(rfq.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</td>
+                          <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3 hidden sm:table-cell text-[9px] sm:text-xs text-purple-300 whitespace-nowrap cursor-pointer" onClick={() => { setSelectedRFQ(rfq); setShowRFQDetails(true); }}>{new Date(rfq.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</td>
+                          <td className="px-2 sm:px-3 md:px-4 py-2 sm:py-3">
+                            <div className="flex gap-1 items-center justify-start">
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => {
+                                  setSelectedRFQ(rfq);
+                                  setShowRFQDetails(true);
+                                }}
+                                className="hover:bg-blue-500/20 text-blue-300 h-8 w-8 p-0"
+                                title="View Details"
+                              >
+                                <Eye className="w-4 h-4" />
+                              </Button>
+                              {rfq.status === 'pending' && (
+                                <>
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    onClick={() => handleApproveRFQ(rfq._id)}
+                                    className="hover:bg-green-500/20 text-green-400 h-8 w-8 p-0"
+                                    title="Approve RFQ"
+                                  >
+                                    <Check className="w-4 h-4" />
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setSelectedRFQ(rfq);
+                                      setShowRejectDialog(true);
+                                    }}
+                                    className="hover:bg-red-500/20 text-red-400 h-8 w-8 p-0"
+                                    title="Reject RFQ"
+                                  >
+                                    <X className="w-4 h-4" />
+                                  </Button>
+                                </>
+                              )}
+                            </div>
+                          </td>
                         </tr>
                       ))}
                     </tbody>
@@ -1512,7 +1615,7 @@ const AdminDashboard = () => {
 
         {/* Material Inquiry Section */}
         {activeTab === 'material-inquiry' && (
-          <div className="h-screen overflow-hidden">
+          <div className="h-full overflow-y-auto">
             <MaterialInquiryManager />
           </div>
         )}
@@ -2119,7 +2222,7 @@ const AdminDashboard = () => {
           <DialogContent className="bg-gradient-to-br from-[#2d1b3d] to-[#1f1529] border-purple-500/30 backdrop-blur-xl">
             <DialogHeader className="border-b border-purple-500/30 pb-4">
               <DialogTitle className="bg-gradient-to-r from-orange-400 to-red-400 bg-clip-text text-transparent">
-                Reject {selectedProduct ? 'Product' : 'Supplier Application'}
+                Reject {selectedProduct ? 'Product' : selectedRFQ ? 'RFQ' : 'Supplier Application'}
               </DialogTitle>
               <DialogDescription className="text-purple-300">
                 Provide a reason for rejection. This will be sent via email.
@@ -2148,12 +2251,17 @@ const AdminDashboard = () => {
                       handleRejectProduct(selectedProduct._id, rejectionReason);
                       setShowRejectDialog(false);
                       setRejectionReason('');
+                    } else if (selectedRFQ) {
+                      handleRejectRFQ(selectedRFQ._id, rejectionReason);
+                      setShowRejectDialog(false);
+                      setRejectionReason('');
+                      setSelectedRFQ(null);
                     } else {
                       handleReject();
                     }
                   }}
                 >
-                  Reject {selectedProduct ? 'Product' : 'Application'}
+                  Reject {selectedProduct ? 'Product' : selectedRFQ ? 'RFQ' : 'Application'}
                 </Button>
               </div>
             </div>

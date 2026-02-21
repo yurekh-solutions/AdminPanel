@@ -8,3 +8,4 @@ export { default as OrderAutomation } from './OrderAutomation';
 export { default as PerformanceAnalytics } from './PerformanceAnalytics';
 export { default as SmartInventory } from './SmartInventory';
 export { default as PriceOptimizer } from './PriceOptimizer';
+export { default as DeletionRequestManager } from './DeletionRequestManager';

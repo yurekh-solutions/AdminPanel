@@ -16,6 +16,7 @@ import {
   PerformanceAnalytics,
   SmartInventory,
   PriceOptimizer,
+  DeletionRequestManager,
 } from './pages';
 
 function App() {
@@ -42,6 +43,7 @@ function App() {
             <Route path="/dashboard/automation/analytics" element={<PerformanceAnalytics />} />
             <Route path="/dashboard/automation/inventory" element={<SmartInventory />} />
             <Route path="/dashboard/automation/pricing" element={<PriceOptimizer />} />
+            <Route path="/dashboard/gdpr-requests" element={<DeletionRequestManager />} />
             <Route path="*" element={<Navigate to="/login" replace />} />
           </Routes>
         </BrowserRouter>

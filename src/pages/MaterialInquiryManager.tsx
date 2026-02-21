@@ -283,8 +283,8 @@ const MaterialInquiryManager: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#1a1625] via-[#2d1b3d] to-[#1a1625] p-6">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-full bg-gradient-to-br from-[#1a1625] via-[#2d1b3d] to-[#1a1625] p-4 sm:p-6 overflow-y-auto">
+      <div className="max-w-7xl mx-auto pb-6">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-white mb-2 flex items-center gap-3">
@@ -410,15 +410,15 @@ const MaterialInquiryManager: React.FC = () => {
               </Button>
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-0">
             {loading ? (
               <div className="text-center text-gray-400 py-12">Loading inquiries...</div>
             ) : filteredInquiries.length === 0 ? (
               <div className="text-center text-gray-400 py-12">No inquiries found</div>
             ) : (
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto max-h-[600px] overflow-y-auto">
                 <table className="w-full">
-                  <thead>
+                  <thead className="sticky top-0 bg-[#2d1b3d] z-10">
                     <tr className="border-b border-white/10">
                       <th className="text-left text-gray-300 py-3 px-4">Inquiry #</th>
                       <th className="text-left text-gray-300 py-3 px-4">Customer</th>
